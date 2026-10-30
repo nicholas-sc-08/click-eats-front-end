@@ -10,9 +10,12 @@ import { NotificationToastComponent } from './shared/components/notification-toa
 import { CheckoutComponent } from './features/customer/checkout/checkout.component';
 import { calculateCoupon } from './features/customer/coupons/coupon';
 import { OrderTrackingComponent } from './features/customer/order-tracking/order-tracking.component';
+import { WorkspaceSidebarComponent } from './shared/components/workspace-sidebar/workspace-sidebar.component';
+import { WorkspaceRole, WorkspaceSection } from './models/workspace.models';
 
-@Component({ selector: 'app-root', standalone: true, imports: [AdminDashboardComponent, CourierDashboardComponent, CustomerAccountComponent, CustomerCatalogComponent, NotificationToastComponent, StoreDashboardComponent, CheckoutComponent, OrderTrackingComponent], template: `
-<div class="app-shell" [class.checkout-active]="view()==='checkout' || view()==='tracking'">
+@Component({ selector: 'app-root', standalone: true, imports: [AdminDashboardComponent, CourierDashboardComponent, CustomerAccountComponent, CustomerCatalogComponent, NotificationToastComponent, StoreDashboardComponent, CheckoutComponent, OrderTrackingComponent, WorkspaceSidebarComponent], template: `
+<div class="app-shell" [class.checkout-active]="role()!=='customer' || view()==='checkout' || view()==='tracking'">
+  @if(role()==='customer') {
   <aside class="sidebar" [class.open]="sidebarOpen()">
     <a class="brand" href="#" (click)="$event.preventDefault(); view.set('home')"><span class="brand-mark">c</span><span>click<span class="brand-eat">eat</span><small>comida boa, sem complicação</small></span></a>
     <div class="side-label">MENU</div>
@@ -25,14 +28,17 @@ import { OrderTrackingComponent } from './features/customer/order-tracking/order
     <div class="side-tip"><span class="tip-icon">✳</span><b>Seu próximo pedido<br>pode sair por nossa conta</b><p>Use seu cupom de boas-vindas e aproveite.</p><button (click)="view.set('coupons')">Ver meus cupons <span>→</span></button></div>
     <div class="side-bottom"><div class="avatar">M</div><div><b>Marina Costa</b><small>Cliente ClickEat</small></div><button class="dots" (click)="view.set('profile')">···</button></div>
   </aside>
+  } @else {
+    <app-workspace-sidebar [role]="workspaceRole()" [section]="workspaceSection()" [open]="sidebarOpen()" (sectionChange)="selectWorkspaceSection($event)" (switchToCustomer)="switchToCustomer()" />
+  }
   <main class="main-area">
-    <header class="topbar"><div class="location"><span class="pin">⌖</span><div><small>ENTREGAR EM</small><b>Rua Harmonia, 321 <span class="chevron">⌄</span></b></div></div><div class="top-actions"><button class="role-switch" (click)="toggleRole()">{{roleLabel()}} <span>⌄</span></button><button class="help-btn" (click)="view.set('profile')">◌ <span>Ajuda</span></button><button class="user-pill" (click)="view.set('profile')"><span class="avatar mini">M</span><span>Marina</span><span class="chevron">⌄</span></button></div><button class="mobile-menu" (click)="sidebarOpen.set(!sidebarOpen())">☰</button></header>
+    <header class="topbar"><div class="location">@if(role()==='customer'){<span class="pin">⌖</span><div><small>ENTREGAR EM</small><b>Rua Harmonia, 321 <span class="chevron">⌄</span></b></div>}@else{<span class="pin">⌂</span><div><small>{{roleLabel().toUpperCase()}}</small><b>{{workspaceTitle()}}</b></div>}</div><div class="top-actions"><button class="role-switch" (click)="toggleRole()">{{roleLabel()}} <span>⌄</span></button><button class="help-btn" (click)="role()==='customer'?view.set('profile'):selectWorkspaceSection('settings')">◌ <span>Ajuda</span></button><button class="user-pill" (click)="role()==='customer'?view.set('profile'):selectWorkspaceSection('settings')"><span class="avatar mini">{{workspaceAvatar()}}</span><span>{{workspaceUser()}}</span><span class="chevron">⌄</span></button></div><button class="mobile-menu" (click)="sidebarOpen.set(!sidebarOpen())">☰</button></header>
     @if (role()==='admin') {
-      <app-admin-dashboard />
+      <app-admin-dashboard [section]="workspaceSection()" />
     } @else if (role()==='store') {
-      <app-store-dashboard />
+      <app-store-dashboard [section]="workspaceSection()" />
     } @else if (role()==='courier') {
-      <app-courier-dashboard />
+      <app-courier-dashboard [section]="workspaceSection()" />
     } @else if (view()==='tracking') {
       <app-order-tracking (back)="view.set('orders')" (contact)="notices.info('O contato com o entregador será conectado ao backend.')" />
     } @else if (view()==='checkout') {
@@ -53,7 +59,15 @@ export class AppComponent {
  readonly notices = inject(NotificationService);
  readonly view = signal<'home'|'storefront'|'coupons'|'orders'|'auth'|'reviews'|'profile'|'checkout'|'tracking'>('home');
  readonly role = signal<'customer'|'admin'|'store'|'courier'>('customer');
+ readonly workspaceRole = computed<WorkspaceRole>(() => {
+   const currentRole = this.role();
+   return currentRole === 'customer' ? 'admin' : currentRole;
+ });
+ readonly workspaceSection = signal<WorkspaceSection>('overview');
  readonly roleLabel = computed(() => ({ customer: 'Cliente', admin: 'Admin', store: 'Restaurante', courier: 'Entregador' }[this.role()]));
+ workspaceTitle(): string { return ({ customer: 'Rua Harmonia, 321', admin: 'Operação ClickEat', store: 'Brasa & Ponto', courier: 'Central de entregas' })[this.role()]; }
+ workspaceUser(): string { return ({ customer: 'Marina', admin: 'Equipe ClickEat', store: 'Brasa & Ponto', courier: 'Rafael' })[this.role()]; }
+ workspaceAvatar(): string { return ({ customer: 'M', admin: 'A', store: 'B', courier: 'R' })[this.role()]; }
  readonly cart = signal<MenuItem[]>([]);
  readonly appliedCouponCode = signal('');
  readonly sidebarOpen = signal(false);
@@ -89,8 +103,11 @@ export class AppComponent {
  toggleRole() {
    const roles: Array<'customer'|'store'|'courier'|'admin'> = ['customer', 'store', 'courier', 'admin'];
    this.role.set(roles[(roles.indexOf(this.role()) + 1) % roles.length]);
+   this.workspaceSection.set('overview');
    this.view.set('home');
  }
+ selectWorkspaceSection(section: WorkspaceSection) { this.workspaceSection.set(section); this.sidebarOpen.set(false); }
+ switchToCustomer() { this.role.set('customer'); this.workspaceSection.set('overview'); this.view.set('home'); this.sidebarOpen.set(false); }
  checkout() { if (this.cart().length) this.view.set('checkout'); }
  completeOrder() { this.cart.set([]); this.appliedCouponCode.set(''); this.view.set('orders'); this.notices.success('Pedido confirmado! Você pode acompanhar tudo em Meus pedidos.'); }
 }
