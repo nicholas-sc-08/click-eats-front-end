@@ -1,0 +1,2 @@
+:host{display:block;min-width:0}.menu-search{display:flex;align-items:center;border:1px solid var(--line);border-radius:7px;background:#fff;padding:0 9px;color:#92988f}.menu-search input{width:128px;border:0;outline:0;padding:8px;font-size:9px}.restaurant-grid app-restaurant-card,.menu-list app-menu-item-card{display:block;min-width:0}
+@media(max-width:760px){.menu-search input{width:95px}}

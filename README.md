@@ -49,3 +49,15 @@ Docker faz sentido desde já para padronizar build e servir os arquivos estátic
 - Commits pequenos no formato `feat: ...`, `fix: ...` ou `chore: ...`.
 - Abrir PR quando a etapa estiver revisável: escopo fechado, interface navegável e build validada. Para este primeiro incremento, sugestão: `feat: create ClickEat delivery experience prototype`.
 - Próxima branch sugerida: `feature/customer-order-flow`, após revisar esta base.
+
+## Organização da interface
+
+- `app.component.ts` compõe o shell, navegação por perfil e fluxo de sacola.
+- `features/customer/catalog/` concentra a descoberta de lojas, filtros, dados de demonstração e cardápios.
+- `features/customer/customer-account.component.ts` reúne cupons, pedidos, avaliações, autenticação e perfil.
+- `features/admin/`, `features/store/` e `features/courier/` isolam os painéis de cada perfil.
+- `shared/components/` contém cartões reutilizáveis de loja e produto e o componente de avisos.
+- `core/notifications/` concentra o serviço e os tipos dos avisos (`success`, `info`, `warning`, `error`).
+- `styles/layout.css` contém o vocabulário visual compartilhado; os componentes mantêm arquivos de estilo próprios quando o comportamento visual é específico.
+
+As interações usam animações curtas de pressionar, foco, favorito e entrada do aviso. O aviso fica no rodapé para confirmar ações sem bloquear a navegação; erro e atenção recebem cores e papéis acessíveis distintos. A preferência `prefers-reduced-motion` reduz as animações.
