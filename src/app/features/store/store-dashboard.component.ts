@@ -4,19 +4,27 @@ import { MENU_BY_RESTAURANT } from '../../core/catalog/catalog.data';
 import { MenuItem } from '../../models/catalog.models';
 import { WorkspaceSection } from '../../models/workspace.models';
 import { ReportsPanelComponent } from '../reports/reports-panel.component';
+import { AnalyticsPanelComponent } from '../analytics/analytics-panel.component';
+import { DeliveryFeesComponent } from '../delivery/delivery-fees.component';
+import { RestaurantProfileComponent } from './restaurant-profile.component';
+import { RestaurantReviewsComponent } from './restaurant-reviews.component';
+import { InventoryService } from '../../core/catalog/inventory.service';
 
 @Component({
   selector: 'app-store-dashboard',
   standalone: true,
-  imports: [ReportsPanelComponent],
+  imports: [ReportsPanelComponent, AnalyticsPanelComponent, DeliveryFeesComponent, RestaurantProfileComponent, RestaurantReviewsComponent],
   template: `
     @if(section === 'reports') {
       <app-reports-panel [scope]="'store'" />
+    } @else if(section === 'settings') {
+      <app-restaurant-profile /><app-delivery-fees [owner]="'store'" />
     } @else {
     <section class="content">
       <div class="eyebrow">ÁREA DO PARCEIRO</div><h1>{{sectionTitle()}} <span>Brasa & Ponto.</span></h1>
       <p class="subheading">{{sectionDescription()}}</p>
       @if(section === 'overview') {
+      <app-analytics-panel [scope]="'store'" />
       <div class="stats-grid store-stats">
         <article class="stat-card"><small>Vendas hoje</small><b>R$ 1.842 <span class="up">↗ 18%</span></b><span>42 pedidos</span></article>
         <article class="stat-card"><small>Pedidos recebidos</small><b>12 <span class="up">+3</span></b><span>4 aguardam confirmação</span></article>
@@ -33,13 +41,11 @@ import { ReportsPanelComponent } from '../reports/reports-panel.component';
       @if(section === 'overview' || section === 'catalog') {
       <section class="panel promotion-manager"><div class="panel-heading"><div><div class="eyebrow">CARDÁPIO</div><h2>Promoções dos produtos</h2><p>Ative ou ajuste uma oferta para ela aparecer para os clientes.</p></div><span class="promo-preview-badge">✦ Vitrine do cliente</span></div>
         <div class="promotion-list">@for(product of products; track product.name){<article class="promotion-row"><div class="promotion-product"><img [src]="product.image" [alt]="product.name" (error)="useFallback($event)"><div><b>{{product.name}}</b><small>{{product.desc}}</small>@if(promotions.promotionFor(product);as deal){<span class="promo-price">R$ {{deal.discountedPrice.toFixed(2).replace('.', ',')}} <del>R$ {{deal.originalPrice.toFixed(2).replace('.', ',')}}</del></span>}@else{<span class="regular-price">R$ {{product.price.toFixed(2).replace('.', ',')}}</span>}</div></div>
-          <div class="promotion-controls"><label class="discount-select">Desconto<select [value]="promotionPercent(product)" (change)="setPromotionPercent(product, $any($event.target).value)"><option value="10">10%</option><option value="15">15%</option><option value="20">20%</option><option value="25">25%</option><option value="30">30%</option></select></label><label class="promotion-toggle"><input type="checkbox" [checked]="promotions.isActive(product)" (change)="togglePromotion(product, $any($event.target).checked)"><span class="toggle-track"></span><span>{{promotions.isActive(product)?'Ativa':'Desativada'}}</span></label></div>
+          <div class="promotion-controls"><label class="discount-select">Desconto<select [value]="promotionPercent(product)" (change)="setPromotionPercent(product, $any($event.target).value)"><option value="10">10%</option><option value="15">15%</option><option value="20">20%</option><option value="25">25%</option><option value="30">30%</option></select></label><label class="promotion-toggle"><input type="checkbox" [checked]="promotions.isActive(product)" (change)="togglePromotion(product, $any($event.target).checked)"><span class="toggle-track"></span><span>{{promotions.isActive(product)?'Ativa':'Desativada'}}</span></label><label class="stock-limit"><input type="checkbox" [checked]="inventory.limitFor(product.name).enabled" (change)="setStockEnabled(product.name,$any($event.target).checked)">Limitar estoque</label>@if(inventory.limitFor(product.name).enabled){<label class="stock-count">Unidades<input type="number" min="0" [value]="inventory.limitFor(product.name).quantity" (change)="setStockQuantity(product.name,$any($event.target).value)"></label>}</div>
         </article>}</div>
       </section>
       }
-      @if(section === 'reviews' || section === 'settings') {
-        <article class="panel workspace-placeholder"><span>☆</span><h2>{{sectionTitle()}}</h2><p>{{section === 'reviews' ? 'As avaliações recebidas pela loja serão exibidas aqui.' : 'Gerencie aqui os dados e as preferências da sua loja.'}}</p></article>
-      }
+      @if(section === 'reviews') { <app-restaurant-reviews /> }
     </section>
     }
   `,
@@ -48,8 +54,11 @@ import { ReportsPanelComponent } from '../reports/reports-panel.component';
 export class StoreDashboardComponent {
   @Input() section: WorkspaceSection = 'overview';
   readonly promotions = inject(PromotionService);
+  readonly inventory = inject(InventoryService);
   readonly products = MENU_BY_RESTAURANT['Brasa & Ponto'];
   readonly configuredDiscounts = signal<Record<string, number>>({});
+  setStockEnabled(name:string,enabled:boolean):void{this.inventory.save(name,{...this.inventory.limitFor(name),enabled});}
+  setStockQuantity(name:string,value:string):void{this.inventory.save(name,{enabled:true,quantity:Math.max(0,Number(value)||0)});}
 
   promotionPercent(product: MenuItem): number { return this.promotions.promotionFor(product)?.discountPercent ?? this.configuredDiscounts()[product.name] ?? 15; }
   togglePromotion(product: MenuItem, enabled: boolean): void {

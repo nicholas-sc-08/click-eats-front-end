@@ -5,8 +5,9 @@ import { MenuItemCardComponent } from '../../../shared/components/menu-item-card
 import { RestaurantCardComponent } from '../../../shared/components/restaurant-card/restaurant-card.component';
 import { ProductDetailComponent } from '../product-detail/product-detail.component';
 import { PromotionService } from '../../../core/catalog/promotion.service';
+import { InventoryService } from '../../../core/catalog/inventory.service';
 
-type CatalogView = 'home' | 'storefront';
+type CatalogView = 'home' | 'storefront' | 'tracking';
 
 @Component({
   selector: 'app-customer-catalog',
@@ -25,6 +26,7 @@ type CatalogView = 'home' | 'storefront';
       </section>
     } @else {
       <section class="content">
+        <button class="active-delivery-card" type="button" (click)="navigate.emit('tracking')"><span class="delivery-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7h11v11H3zM14 11h4l3 4v3h-7z"/><circle cx="7.5" cy="19" r="2"/><circle cx="17.5" cy="19" r="2"/></svg></span><span class="delivery-copy"><small>PEDIDO #CE-8425 · BRASA & PONTO</small><strong>Seu pedido saiu para entrega!</strong><span>Rafael está a caminho · previsão de 8 min</span></span><span class="delivery-cta">Acompanhar <b>→</b></span><i class="delivery-pulse"></i></button>
         <div class="welcome-row"><div><div class="eyebrow">QUINTA-FEIRA, 30 DE OUTUBRO</div><h1>Oi, Marina <span>♡</span></h1><p class="subheading">O que vai deixar seu dia mais gostoso?</p></div><div class="weather-pill">☀ <span>22° em São Paulo</span></div></div>
         <label class="search-row"><span>⌕</span><input aria-label="Buscar restaurantes" placeholder="O que você quer comer hoje?" [value]="query()" (input)="query.set($any($event.target).value)"><kbd>⌘ K</kbd><button type="button">Buscar</button></label>
         <div class="hero"><div class="hero-copy"><span class="hero-tag">✳ SÓ HOJE</span><h2>Seu próximo<br>pedido favorito<br><em>tem desconto.</em></h2><p>Use <b>PRIMEIRACOMPRA</b> e ganhe R$ 15 de desconto no seu pedido.</p><button type="button" (click)="couponRequest.emit()">Aproveitar oferta <span>→</span></button><small>*Em pedidos acima de R$ 35</small></div><div class="hero-visual"><div class="hero-orbit"></div><div class="hero-food">🍔</div><div class="hero-fry">🍟</div><div class="hero-sticker">-15<span>REAIS</span></div><div class="hero-star">✳</div></div></div>
@@ -40,6 +42,7 @@ type CatalogView = 'home' | 'storefront';
 })
 export class CustomerCatalogComponent {
   readonly promotions = inject(PromotionService);
+  readonly inventory = inject(InventoryService);
   @Input({ required: true }) view: string = 'home';
   @Output() navigate = new EventEmitter<CatalogView>();
   @Output() addToCart = new EventEmitter<MenuItem[]>();
@@ -60,7 +63,7 @@ export class CustomerCatalogComponent {
   readonly selectedStore = computed(() => this.restaurants.find(store => store.name === this.activeStore()) ?? this.restaurants[0]);
   readonly visibleMenu = computed(() => {
     const query = this.menuQuery().trim().toLowerCase();
-    return (MENU_BY_RESTAURANT[this.activeStore()] ?? []).filter(item => !query || item.name.toLowerCase().includes(query) || item.desc.toLowerCase().includes(query));
+    return (MENU_BY_RESTAURANT[this.activeStore()] ?? []).map(item => ({...item,stockAvailable:this.inventory.available(item.name)})).filter(item => !query || item.name.toLowerCase().includes(query) || item.desc.toLowerCase().includes(query));
   });
   readonly visibleRestaurants = computed(() => {
     const restaurantByCategory: Record<string, string> = {

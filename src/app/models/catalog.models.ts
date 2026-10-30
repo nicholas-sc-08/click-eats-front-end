@@ -15,4 +15,5 @@ export interface MenuItem {
   tag: string;
   originalPrice?: number;
   discountPercent?: number;
+  stockAvailable?: boolean;
 }

@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./styles/layout.css";
+@import "./styles/theme.css";
 :root{
     font-family:Inter,ui-sans-serif,system-ui,-apple-system,
     "Segoe UI",sans-serif;

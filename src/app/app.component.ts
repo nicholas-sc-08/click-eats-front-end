@@ -14,7 +14,7 @@ import { WorkspaceSidebarComponent } from './shared/components/workspace-sidebar
 import { WorkspaceRole, WorkspaceSection } from './models/workspace.models';
 
 @Component({ selector: 'app-root', standalone: true, imports: [AdminDashboardComponent, CourierDashboardComponent, CustomerAccountComponent, CustomerCatalogComponent, NotificationToastComponent, StoreDashboardComponent, CheckoutComponent, OrderTrackingComponent, WorkspaceSidebarComponent], template: `
-<div class="app-shell" [class.checkout-active]="role()!=='customer' || view()==='checkout' || view()==='tracking'">
+<div class="app-shell" [class.dark-theme]="isDarkTheme()" [class.checkout-active]="role()!=='customer' || view()==='checkout' || view()==='tracking'">
   @if(role()==='customer') {
   <aside class="sidebar" [class.open]="sidebarOpen()">
     <a class="brand" href="#" (click)="$event.preventDefault(); view.set('home')"><span class="brand-mark">c</span><span>click<span class="brand-eat">eat</span><small>comida boa, sem complicação</small></span></a>
@@ -32,7 +32,7 @@ import { WorkspaceRole, WorkspaceSection } from './models/workspace.models';
     <app-workspace-sidebar [role]="workspaceRole()" [section]="workspaceSection()" [open]="sidebarOpen()" (sectionChange)="selectWorkspaceSection($event)" (switchToCustomer)="switchToCustomer()" />
   }
   <main class="main-area">
-    <header class="topbar"><div class="location">@if(role()==='customer'){<span class="pin">⌖</span><div><small>ENTREGAR EM</small><b>Rua Harmonia, 321 <span class="chevron">⌄</span></b></div>}@else{<span class="pin">⌂</span><div><small>{{roleLabel().toUpperCase()}}</small><b>{{workspaceTitle()}}</b></div>}</div><div class="top-actions"><button class="role-switch" (click)="toggleRole()">{{roleLabel()}} <span>⌄</span></button><button class="help-btn" (click)="role()==='customer'?view.set('profile'):selectWorkspaceSection('settings')">◌ <span>Ajuda</span></button><button class="user-pill" (click)="role()==='customer'?view.set('profile'):selectWorkspaceSection('settings')"><span class="avatar mini">{{workspaceAvatar()}}</span><span>{{workspaceUser()}}</span><span class="chevron">⌄</span></button></div><button class="mobile-menu" (click)="sidebarOpen.set(!sidebarOpen())">☰</button></header>
+    <header class="topbar"><div class="location">@if(role()==='customer'){<span class="pin">⌖</span><div><small>ENTREGAR EM</small><b>Rua Harmonia, 321 <span class="chevron">⌄</span></b></div>}@else{<span class="pin">⌂</span><div><small>{{roleLabel().toUpperCase()}}</small><b>{{workspaceTitle()}}</b></div>}</div><div class="top-actions"><button class="role-switch" (click)="toggleRole()">{{roleLabel()}} <span>⌄</span></button><button class="theme-toggle" type="button" (click)="toggleTheme()" [attr.aria-label]="isDarkTheme()?'Ativar tema claro':'Ativar tema escuro'" [title]="isDarkTheme()?'Ativar tema claro':'Ativar tema escuro'"><span aria-hidden="true">{{isDarkTheme()?'☀':'☾'}}</span><span class="theme-toggle-label">{{isDarkTheme()?'Tema claro':'Tema escuro'}}</span></button><button class="help-btn" (click)="role()==='customer'?view.set('profile'):selectWorkspaceSection('settings')">◌ <span>Ajuda</span></button><button class="user-pill" (click)="role()==='customer'?view.set('profile'):selectWorkspaceSection('settings')"><span class="avatar mini">{{workspaceAvatar()}}</span><span>{{workspaceUser()}}</span><span class="chevron">⌄</span></button></div><button class="mobile-menu" (click)="sidebarOpen.set(!sidebarOpen())">☰</button></header>
     @if (role()==='admin') {
       <app-admin-dashboard [section]="workspaceSection()" />
     } @else if (role()==='store') {
@@ -57,6 +57,7 @@ import { WorkspaceRole, WorkspaceSection } from './models/workspace.models';
 ` })
 export class AppComponent {
  readonly notices = inject(NotificationService);
+ readonly isDarkTheme = signal(this.readSavedTheme());
  readonly view = signal<'home'|'storefront'|'coupons'|'orders'|'auth'|'reviews'|'profile'|'checkout'|'tracking'>('home');
  readonly role = signal<'customer'|'admin'|'store'|'courier'>('customer');
  readonly workspaceRole = computed<WorkspaceRole>(() => {
@@ -75,6 +76,15 @@ export class AppComponent {
  readonly deliveryFee = computed(() => this.cart().length ? 4.99 : 0);
  readonly couponDiscount = computed(() => calculateCoupon(this.appliedCouponCode(), this.subtotal(), this.deliveryFee()).discount);
  readonly total = computed(() => Math.max(0, this.subtotal() + this.deliveryFee() - this.couponDiscount()));
+
+ private readSavedTheme(): boolean {
+   try { return localStorage.getItem('clickeat.theme') === 'dark'; } catch { return false; }
+ }
+ toggleTheme(): void {
+   const nextTheme = !this.isDarkTheme();
+   this.isDarkTheme.set(nextTheme);
+   try { localStorage.setItem('clickeat.theme', nextTheme ? 'dark' : 'light'); } catch { /* Theme remains available for this session. */ }
+ }
 
  add(item: MenuItem) { this.cart.update(items => [...items, item]); this.notices.success(`${item.name} entrou na sacola.`); }
  addMany(items: MenuItem[]) {
