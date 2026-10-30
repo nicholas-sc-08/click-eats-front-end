@@ -3,23 +3,24 @@ import { Restaurant, MenuItem } from '../../../models/catalog.models';
 import { deliveryEstimate, MENU_BY_RESTAURANT, restaurantEmoji, RESTAURANTS } from './catalog.data';
 import { MenuItemCardComponent } from '../../../shared/components/menu-item-card/menu-item-card.component';
 import { RestaurantCardComponent } from '../../../shared/components/restaurant-card/restaurant-card.component';
+import { ProductDetailComponent } from '../product-detail/product-detail.component';
 
 type CatalogView = 'home' | 'storefront';
 
 @Component({
   selector: 'app-customer-catalog',
   standalone: true,
-  imports: [MenuItemCardComponent, RestaurantCardComponent],
+  imports: [MenuItemCardComponent, RestaurantCardComponent, ProductDetailComponent],
   template: `
     @if (view === 'storefront') {
       <section class="content store-page">
         <button class="back-link" type="button" (click)="navigate.emit('home')">← <span>Voltar para lojas</span></button>
-        <div class="store-cover" [style.background-image]="'linear-gradient(90deg, #182a26cc, #182a2640), url(' + selectedStore().image + ')'">
+        <div class="store-cover" [style.background-image]="'linear-gradient(90deg, #182a26cc, #182a2640), url(' + selectedStore().image + '), url(/images/food-fallback.svg)'">
           <span class="cover-tag">{{ selectedStore().tag }}</span><h1>{{ selectedStore().name }}</h1><p>{{ selectedStore().desc }}</p>
         </div>
         <div class="store-summary"><span class="store-avatar">{{ emoji(selectedStore().name) }}</span><div><strong>★ {{ selectedStore().rating }}</strong><span> · {{ reviewCount(selectedStore().name) }} avaliações</span><small>Entrega em {{ deliveryTime(selectedStore().name) }} min · taxa R$ 4,99</small></div><span class="open-label"><i></i> Aberto</span></div>
         <div class="menu-intro"><div><div class="eyebrow">FEITO NA HORA, COM CARINHO</div><h2>O cardápio</h2><p>Escolha seus favoritos e a gente leva até você.</p></div><label class="menu-search">⌕ <input aria-label="Buscar no cardápio" placeholder="Buscar no cardápio" [value]="menuQuery()" (input)="menuQuery.set($any($event.target).value)"></label></div>
-        <div class="menu-list">@for (item of visibleMenu(); track item.name) { <app-menu-item-card [item]="item" (add)="addToCart.emit($event)" /> }</div>
+        <div class="menu-list">@for (item of visibleMenu(); track item.name) { <app-menu-item-card [item]="item" (add)="addSingleToCart($event)" (select)="selectedProduct.set($event)" /> }</div>
       </section>
     } @else {
       <section class="content">
@@ -32,13 +33,14 @@ type CatalogView = 'home' | 'storefront';
         <div class="restaurant-grid">@for (restaurant of visibleRestaurants(); track restaurant.name) { <app-restaurant-card [restaurant]="restaurant" [deliveryEstimate]="deliveryTime(restaurant.name)" [favorite]="favorites().includes(restaurant.name)" (open)="openStore($event)" (favoriteToggle)="toggleFavorite($event)" /> }</div>
       </section>
     }
+    @if (selectedProduct(); as product) { <app-product-detail [product]="product" (close)="selectedProduct.set(null)" (addToCart)="addToCart.emit($event); selectedProduct.set(null)" /> }
   `,
   styleUrl: './customer-catalog.component.css',
 })
 export class CustomerCatalogComponent {
   @Input({ required: true }) view: string = 'home';
   @Output() navigate = new EventEmitter<CatalogView>();
-  @Output() addToCart = new EventEmitter<MenuItem>();
+  @Output() addToCart = new EventEmitter<MenuItem[]>();
   @Output() couponRequest = new EventEmitter<void>();
 
   readonly restaurants: Restaurant[] = RESTAURANTS;
@@ -52,6 +54,7 @@ export class CustomerCatalogComponent {
   readonly favorites = signal<string[]>([]);
   readonly activeStore = signal('Brasa & Ponto');
   readonly menuQuery = signal('');
+  readonly selectedProduct = signal<MenuItem | null>(null);
   readonly selectedStore = computed(() => this.restaurants.find(store => store.name === this.activeStore()) ?? this.restaurants[0]);
   readonly visibleMenu = computed(() => {
     const query = this.menuQuery().trim().toLowerCase();
@@ -71,6 +74,7 @@ export class CustomerCatalogComponent {
   });
 
   selectCategory(name: string): void { this.category.set(this.category() === name ? 'Todas' : name); }
+  addSingleToCart(item: MenuItem): void { this.addToCart.emit([item]); }
   openStore(restaurant: Restaurant): void { this.activeStore.set(restaurant.name); this.menuQuery.set(''); this.navigate.emit('storefront'); }
   toggleFavorite(name: string): void { this.favorites.update(items => items.includes(name) ? items.filter(item => item !== name) : [...items, name]); }
   deliveryTime(name: string): string { return deliveryEstimate(name); }

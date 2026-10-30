@@ -13,3 +13,4 @@ app-root{--ink:#252b28;--muted:#747b75;--line:#e8ebe6;--paper:#f7f8f5;--coral:#1
 /* Readable type scale for the customer catalog. */
 .content .subheading{font-size:13px;line-height:1.5}.section-heading h2{font-size:17px}.section-heading p{font-size:11px}.category-card b{font-size:10px}.category-card small{font-size:9px}.category-emoji{font-size:27px}.search-row input{font-size:12px}.category-card,.text-btn,.back-link{cursor:pointer}
 @media(max-width:760px){.section-heading h2{font-size:15px}.section-heading p{font-size:10px}.category-card b{font-size:9px}.category-card small{font-size:8px}.content .subheading{font-size:11px}}
+.app-shell.checkout-active{grid-template-columns:222px minmax(0,1fr)}.app-shell.checkout-active .cart-panel{display:none}@media(min-width:1500px){.app-shell.checkout-active{grid-template-columns:240px minmax(0,1fr)}}
