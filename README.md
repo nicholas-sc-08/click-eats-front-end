@@ -19,7 +19,7 @@ A interface atual usa dados fictícios e estado local. Login Google, checkout, s
 
 ## Interfaces incluídas
 
-- Cliente: início, busca e filtros, sacola, cupons, pedidos, perfil, login, recuperação de conta e avaliações
+- Cliente: início, busca e filtros, seis lojas com cardápios demonstrativos, sacola, cupons, pedidos, perfil, login, recuperação de conta e avaliações
 - Restaurante: resumo de vendas e pedidos para aceitar/preparar
 - Entregador: ganhos, entregas e rota simulada
 - Admin: indicadores, gráficos de operação, categorias e lojas
