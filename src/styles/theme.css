@@ -274,3 +274,46 @@
 .app-shell.dark-theme app-restaurant-profile .profile-form label { color:#d8e5da; }
 .app-shell.dark-theme .stock-limit,.app-shell.dark-theme .stock-count { color:#b2c2b5; }
 .app-shell.dark-theme .stock-count input { background:#15221a;border-color:#354a3b;color:#e5eee6; }
+
+/* Neutral charcoal dark mode: keep ClickEat green for brand actions only. */
+.app-shell.dark-theme {
+  --ink:#f0f1f3;
+  --muted:#a1a6af;
+  --line:#2a2e35;
+  --paper:#0c0e11;
+  --coral:#43c294;
+  --soft:#1b3029;
+  color:#eceef1;
+  background:#0c0e11;
+}
+.app-shell.dark-theme .main-area { background:radial-gradient(ellipse at 50% -20%,#1b1e24 0,transparent 45%),#0c0e11;color:#eceef1; }
+.app-shell.dark-theme .sidebar,.app-shell.dark-theme .topbar,.app-shell.dark-theme .cart-panel { background:#111317;border-color:#292d34;color:#eceef1; }
+.app-shell.dark-theme .panel,.app-shell.dark-theme .stat-card,.app-shell.dark-theme .restaurant-card,.app-shell.dark-theme .category-card,.app-shell.dark-theme .purchase-card,.app-shell.dark-theme .coupon-card,.app-shell.dark-theme .profile-card,.app-shell.dark-theme .review-panel,.app-shell.dark-theme .search-row,.app-shell.dark-theme .cart-item,.app-shell.dark-theme .empty-cart,.app-shell.dark-theme .date-row,.app-shell.dark-theme .analytics-shell .metric-card,.app-shell.dark-theme .analytics-shell .chart-card,.app-shell.dark-theme .analytics-shell .management-card,.app-shell.dark-theme .account-management { background:#171a1f;border-color:#2b3038;color:#e7e9ed;box-shadow:0 12px 28px #00000025; }
+.app-shell.dark-theme input,.app-shell.dark-theme select,.app-shell.dark-theme textarea,.app-shell.dark-theme .account-search,.app-shell.dark-theme .entity-switch button,.app-shell.dark-theme .account-management .row-actions button { background:#111317;border-color:#30353d;color:#e7e9ed; }
+.app-shell.dark-theme .topbar button:not(.theme-toggle),.app-shell.dark-theme .side-link { color:#c1c5cc; }
+.app-shell.dark-theme .topbar .theme-toggle,.app-shell.dark-theme .switch-account { background:#1c2026;border-color:#343a43;color:#e0e3e8; }
+.app-shell.dark-theme .side-link.active,.app-shell.dark-theme .analytics-shell .entity-switch button.active,.app-shell.dark-theme .account-management .entity-switch button.active { background:#1c332b;border-color:#315543;color:#9ce2c1; }
+.app-shell.dark-theme .account-name>span,.app-shell.dark-theme .delivery-icon { background:#202a30;color:#8bdab5; }
+.app-shell.dark-theme .active-delivery-card { background:linear-gradient(110deg,#1b2221,#191d21 78%,#202522);border-color:#38423f; }
+.app-shell.dark-theme .delivery-copy strong { color:#f0f1f3; }
+.app-shell.dark-theme .delivery-copy small,.app-shell.dark-theme .delivery-cta { color:#86d8b0; }
+.app-shell.dark-theme .delivery-copy>span { color:#b0b5be; }
+.app-shell.dark-theme .account-dialog,.app-shell.dark-theme .analytics-shell .account-dialog { background:#191c21;border-color:#363b44;color:#eceef1; }
+.app-shell.dark-theme .analytics-shell .line-chart { border-color:#30353d;background:repeating-linear-gradient(to bottom,transparent 0,transparent 37px,#292e35 38px,#292e35 39px); }
+.app-shell.dark-theme .analytics-shell .donut>div { background:#171a1f; }
+.app-shell.dark-theme .analytics-shell .table-head { background:#20242a;color:#aeb3bc; }
+.app-shell.dark-theme .analytics-shell .product-bar { background:#2b3037; }
+.app-shell.dark-theme .analytics-shell .account-status { background:#1c3329;color:#9ce2bd; }
+.app-shell.dark-theme .analytics-shell .account-status.pending { background:#3b3020;color:#f0c988; }
+.app-shell.dark-theme .analytics-shell .view-account,.app-shell.dark-theme .analytics-shell .export-note { background:#20252a;border-color:#3a4249;color:#a4dfbf; }
+.app-shell.dark-theme app-restaurant-reviews .review-summary,.app-shell.dark-theme app-restaurant-reviews .review-card { background:#171a1f;border-color:#2b3038; }
+.app-shell.dark-theme app-restaurant-reviews .review-highlights,.app-shell.dark-theme app-restaurant-reviews .merchant-reply { background:#20252a; }
+.app-shell.dark-theme app-restaurant-reviews .review-highlights b,.app-shell.dark-theme app-restaurant-reviews .merchant-reply b { color:#a9dfbf; }
+.app-shell.dark-theme app-restaurant-reviews .bar { background:#30353d; }
+.app-shell.dark-theme app-restaurant-reviews .reply-editor,.app-shell.dark-theme app-restaurant-reviews select { background:#111317;border-color:#30353d;color:#e7e9ed; }
+.app-shell.dark-theme app-restaurant-profile .profile-cover { filter:saturate(.72); }
+.app-shell.dark-theme app-restaurant-profile .profile-form input,.app-shell.dark-theme app-restaurant-profile .upload-button,.app-shell.dark-theme .stock-count input { background:#111317;border-color:#30353d;color:#e7e9ed; }
+.app-shell.dark-theme app-restaurant-profile .logo-upload-row,.app-shell.dark-theme app-restaurant-profile .profile-save { border-color:#2b3038; }
+.app-shell.dark-theme app-delivery-fees .fee-config-card,.app-shell.dark-theme app-delivery-fees .model-card,.app-shell.dark-theme app-delivery-fees .platform-selected,.app-shell.dark-theme app-reports-panel .report-filters,.app-shell.dark-theme app-reports-panel .report-results { background:#171a1f;border-color:#2b3038;color:#e7e9ed; }
+.app-shell.dark-theme app-delivery-fees .config-summary>div,.app-shell.dark-theme app-delivery-fees .config-summary>label,.app-shell.dark-theme app-delivery-fees .fee-note,.app-shell.dark-theme app-delivery-fees .rule-icon,.app-shell.dark-theme app-delivery-fees .new-rule { background:#20242a;border-color:#323740; }
+.app-shell.dark-theme .footer { border-color:#292d34;color:#878d97; }
