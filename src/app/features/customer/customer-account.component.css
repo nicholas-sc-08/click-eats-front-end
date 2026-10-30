@@ -1,1 +1,2 @@
 :host{display:block;min-width:0}.stars button{transition:transform .16s ease,color .18s ease}.stars button:hover{transform:scale(1.16)}.coupon-card button{transition:transform .16s ease,background-color .18s ease}.coupon-card button:active{transform:scale(.97)}
+.applied-coupon-banner{margin:16px 0;padding:12px 14px;border:1px solid #d7e8db;border-radius:10px;background:#f2f8f3;color:#27745d;font-size:13px;font-weight:700;animation:coupon-banner-in .2s ease both}@keyframes coupon-banner-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}

@@ -14,3 +14,21 @@ app-root{--ink:#252b28;--muted:#747b75;--line:#e8ebe6;--paper:#f7f8f5;--coral:#1
 .content .subheading{font-size:13px;line-height:1.5}.section-heading h2{font-size:17px}.section-heading p{font-size:11px}.category-card b{font-size:10px}.category-card small{font-size:9px}.category-emoji{font-size:27px}.search-row input{font-size:12px}.category-card,.text-btn,.back-link{cursor:pointer}
 @media(max-width:760px){.section-heading h2{font-size:15px}.section-heading p{font-size:10px}.category-card b{font-size:9px}.category-card small{font-size:8px}.content .subheading{font-size:11px}}
 .app-shell.checkout-active{grid-template-columns:222px minmax(0,1fr)}.app-shell.checkout-active .cart-panel{display:none}@media(min-width:1500px){.app-shell.checkout-active{grid-template-columns:240px minmax(0,1fr)}}
+
+/* Accessible, consistent scrolling across catalogues, dialogs and dashboards. */
+*{scrollbar-width:thin;scrollbar-color:#b9cfc2 transparent;scroll-behavior:smooth}
+*::-webkit-scrollbar{width:9px;height:9px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{border:2px solid transparent;border-radius:999px;background:#bfd2c6;background-clip:padding-box;transition:background-color .2s ease}
+*::-webkit-scrollbar-thumb:hover{background:#8fb5a0;background-clip:padding-box}
+.cart-panel{overflow:hidden}
+.cart-items{flex:1;min-height:80px;overflow-y:auto;overscroll-behavior:contain;scrollbar-gutter:stable;padding-right:3px}
+.cart-items.empty{flex:1;overflow:visible}
+.cart-recommend{flex:none}
+.cart-totals,.cart-coupon,.cart-applied-coupon,.checkout,.secure-note,.cart-divider,.cart-help{flex:none}
+.cart-applied-coupon{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border:1px solid #d8e9dd;border-radius:9px;background:#f3f8f4;color:#26725c;font-size:9px;font-weight:750;animation:coupon-in .2s ease both}
+.cart-applied-coupon button{width:22px;height:22px;border:0;border-radius:6px;background:#e4f0e8;color:#4e6658;font-size:16px}
+.cart-totals .discount-line{color:#29765e}
+.cart-totals .discount-line b{color:#29765e}
+@keyframes coupon-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@media(max-height:760px){.cart-panel{padding-top:16px;padding-bottom:12px}.cart-heading{padding-bottom:10px}.cart-recommend{padding:8px 0}.cart-totals{padding:8px 0 4px}.cart-help{padding-top:6px}}

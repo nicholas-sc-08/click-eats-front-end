@@ -6,7 +6,7 @@ import { NotificationService } from '../../core/notifications/notification.servi
   standalone: true,
   template: `
     @if (view === 'coupons') {
-      <section class="content"><div class="eyebrow">UM MIMO PRA VOCÊ</div><h1>Seus <span>cupons.</span></h1><p class="subheading">Um empurrãozinho para deixar a refeição ainda melhor.</p><div class="coupon-input"><input aria-label="Código do cupom" placeholder="Digite seu código promocional" [value]="couponCode()" (input)="couponCode.set($any($event.target).value)"><button (click)="applyCoupon()">Adicionar cupom</button></div><div class="coupon-grid"><article class="coupon-card featured-coupon"><span class="coupon-icon">✳</span><div><small>PRIMEIRA COMPRA</small><h2>R$ 15 <span>OFF</span></h2><p>na sua primeira compra acima de R$ 35</p><button (click)="copyCoupon('PRIMEIRACOMPRA')">Copiar código <b>PRIMEIRACOMPRA</b></button></div><i class="coupon-spark">✳</i></article><article class="coupon-card"><span class="coupon-icon orange">⌁</span><div><small>FRETE GRÁTIS</small><h2>Entrega <span>por nossa conta</span></h2><p>em restaurantes selecionados perto de você</p><button (click)="copyCoupon('FRETEGRATIS')">Copiar código <b>FRETEGRATIS</b></button></div></article><article class="coupon-card"><span class="coupon-icon yellow">☼</span><div><small>ALMOÇO FELIZ</small><h2>R$ 10 <span>OFF</span></h2><p>pedidos entre 11h e 14h acima de R$ 50</p><button (click)="copyCoupon('ALMOCO10')">Copiar código <b>ALMOCO10</b></button></div></article></div></section>
+      <section class="content"><div class="eyebrow">UM MIMO PRA VOCÊ</div><h1>Seus <span>cupons.</span></h1><p class="subheading">Um empurrãozinho para deixar a refeição ainda melhor.</p>@if(appliedCouponCode){<div class="applied-coupon-banner">✓ Cupom {{ appliedCouponCode }} aplicado ao seu pedido.</div>}<div class="coupon-input"><input aria-label="Código do cupom" placeholder="Digite seu código promocional" [value]="couponCode()" (input)="couponCode.set($any($event.target).value)"><button (click)="applyCoupon()">Aplicar cupom</button></div><div class="coupon-grid"><article class="coupon-card featured-coupon"><span class="coupon-icon">✳</span><div><small>PRIMEIRA COMPRA</small><h2>R$ 15 <span>OFF</span></h2><p>na sua primeira compra acima de R$ 35</p><button (click)="applyCouponCode('PRIMEIRACOMPRA')">Aplicar cupom <b>PRIMEIRACOMPRA</b></button></div><i class="coupon-spark">✳</i></article><article class="coupon-card"><span class="coupon-icon orange">⌁</span><div><small>FRETE GRÁTIS</small><h2>Entrega <span>por nossa conta</span></h2><p>em restaurantes selecionados perto de você</p><button (click)="applyCouponCode('FRETEGRATIS')">Aplicar cupom <b>FRETEGRATIS</b></button></div></article><article class="coupon-card"><span class="coupon-icon yellow">☼</span><div><small>ALMOÇO FELIZ</small><h2>R$ 10 <span>OFF</span></h2><p>pedidos acima de R$ 50</p><button (click)="applyCouponCode('ALMOCO10')">Aplicar cupom <b>ALMOCO10</b></button></div></article></div></section>
     } @else if (view === 'orders') {
       <section class="content"><div class="eyebrow">SUA JORNADA DE SABORES</div><h1>Meus <span>pedidos.</span></h1><p class="subheading">Tudo que já chegou — e tudo que ainda está a caminho.</p><div class="order-tabs"><button class="active">Todos <span>4</span></button><button>Em andamento <span>1</span></button><button>Concluídos <span>3</span></button></div><div class="purchase-list"><article class="purchase-card"><div class="purchase-head"><span class="store-icon burg">🍔</span><div><b>Brasa & Ponto</b><small>Hoje, 12:32 · Pedido #CE-8425</small></div><i class="status preparing">A caminho · 8 min</i></div><div class="purchase-items">1× Burger da casa · 1× Fritas crocantes · 1× Coca-Cola</div><div class="purchase-foot"><b>Total <strong>R$ 58,90</strong></b><button class="soft-btn">Acompanhar pedido →</button></div></article><article class="purchase-card"><div class="purchase-head"><span class="store-icon pizza">🍕</span><div><b>Forno da Vila</b><small>Ontem, 20:15 · Pedido #CE-8390</small></div><i class="status delivered">Entregue</i></div><div class="purchase-items">1× Margherita grande · 1× Fanta Laranja</div><div class="purchase-foot"><b>Total <strong>R$ 76,50</strong></b><button class="soft-btn" (click)="navigate.emit('reviews')">Avaliar pedido ★</button></div></article></div></section>
     } @else if (view === 'auth') {
@@ -22,6 +22,8 @@ import { NotificationService } from '../../core/notifications/notification.servi
 export class CustomerAccountComponent {
   @Input({ required: true }) view = '';
   @Output() navigate = new EventEmitter<'auth'|'reviews'>();
+  @Output() couponApply = new EventEmitter<string>();
+  @Input() appliedCouponCode = '';
   readonly notifications = inject(NotificationService);
   readonly couponCode = signal('');
   readonly authMode = signal<'login'|'recover'|'signup'>('login');
@@ -29,14 +31,10 @@ export class CustomerAccountComponent {
   readonly reviewText = signal('');
 
   applyCoupon(): void {
-    if (this.couponCode().trim().toUpperCase() === 'PRIMEIRACOMPRA') this.notifications.success('Cupom aplicado: R$ 15 de desconto!');
-    else this.notifications.warning('Confira o código do cupom e tente de novo.');
+    this.applyCouponCode(this.couponCode());
   }
 
-  copyCoupon(code: string): void {
-    this.couponCode.set(code);
-    this.notifications.success(`Código ${code} copiado!`);
-  }
+  applyCouponCode(code: string): void { this.couponCode.set(code); this.couponApply.emit(code); }
 
   submitReview(): void {
     if (!this.rating()) {
