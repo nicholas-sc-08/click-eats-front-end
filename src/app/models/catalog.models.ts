@@ -13,4 +13,6 @@ export interface MenuItem {
   price: number;
   image: string;
   tag: string;
+  originalPrice?: number;
+  discountPercent?: number;
 }

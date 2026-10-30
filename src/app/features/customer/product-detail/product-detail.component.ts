@@ -11,7 +11,7 @@ import { MenuItem } from '../../../models/catalog.models';
         <img class="product-hero" [src]="product.image" [alt]="product.name" (error)="useFallback($event)">
         <div class="product-content">
           <span class="product-tag">{{ product.tag }}</span><h2 id="product-title">{{ product.name }}</h2>
-          <p>{{ product.desc }}</p><strong class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</strong>
+          <p>{{ product.desc }}</p><div class="product-price-row"><strong class="product-price">R$ {{ product.price.toFixed(2).replace('.', ',') }}</strong>@if(product.originalPrice){<del>R$ {{product.originalPrice.toFixed(2).replace('.', ',')}}</del><span class="product-deal">{{product.discountPercent}}% OFF</span>}</div>
           <label class="note-label" for="product-note">Alguma observação? <span>Opcional</span></label>
           <textarea id="product-note" maxlength="180" placeholder="Ex.: tirar a cebola" [value]="note()" (input)="note.set($any($event.target).value)"></textarea>
           <div class="product-actions"><div class="quantity-control"><button type="button" aria-label="Diminuir quantidade" [disabled]="quantity()===1" (click)="quantity.update(value => value - 1)">−</button><b>{{ quantity() }}</b><button type="button" aria-label="Aumentar quantidade" (click)="quantity.update(value => value + 1)">＋</button></div>

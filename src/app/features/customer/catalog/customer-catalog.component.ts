@@ -1,9 +1,10 @@
-import { Component, computed, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, computed, EventEmitter, inject, Input, Output, signal } from '@angular/core';
 import { Restaurant, MenuItem } from '../../../models/catalog.models';
-import { deliveryEstimate, MENU_BY_RESTAURANT, restaurantEmoji, RESTAURANTS } from './catalog.data';
+import { deliveryEstimate, MENU_BY_RESTAURANT, restaurantEmoji, RESTAURANTS } from '../../../core/catalog/catalog.data';
 import { MenuItemCardComponent } from '../../../shared/components/menu-item-card/menu-item-card.component';
 import { RestaurantCardComponent } from '../../../shared/components/restaurant-card/restaurant-card.component';
 import { ProductDetailComponent } from '../product-detail/product-detail.component';
+import { PromotionService } from '../../../core/catalog/promotion.service';
 
 type CatalogView = 'home' | 'storefront';
 
@@ -20,7 +21,7 @@ type CatalogView = 'home' | 'storefront';
         </div>
         <div class="store-summary"><span class="store-avatar">{{ emoji(selectedStore().name) }}</span><div><strong>★ {{ selectedStore().rating }}</strong><span> · {{ reviewCount(selectedStore().name) }} avaliações</span><small>Entrega em {{ deliveryTime(selectedStore().name) }} min · taxa R$ 4,99</small></div><span class="open-label"><i></i> Aberto</span></div>
         <div class="menu-intro"><div><div class="eyebrow">FEITO NA HORA, COM CARINHO</div><h2>O cardápio</h2><p>Escolha seus favoritos e a gente leva até você.</p></div><label class="menu-search">⌕ <input aria-label="Buscar no cardápio" placeholder="Buscar no cardápio" [value]="menuQuery()" (input)="menuQuery.set($any($event.target).value)"></label></div>
-        <div class="menu-list">@for (item of visibleMenu(); track item.name) { <app-menu-item-card [item]="item" (add)="addSingleToCart($event)" (select)="selectedProduct.set($event)" /> }</div>
+        <div class="menu-list">@for (item of visibleMenu(); track item.name) { <app-menu-item-card [item]="item" (add)="addSingleToCart($event)" (select)="openProduct($event)" /> }</div>
       </section>
     } @else {
       <section class="content">
@@ -38,6 +39,7 @@ type CatalogView = 'home' | 'storefront';
   styleUrl: './customer-catalog.component.css',
 })
 export class CustomerCatalogComponent {
+  readonly promotions = inject(PromotionService);
   @Input({ required: true }) view: string = 'home';
   @Output() navigate = new EventEmitter<CatalogView>();
   @Output() addToCart = new EventEmitter<MenuItem[]>();
@@ -75,6 +77,7 @@ export class CustomerCatalogComponent {
 
   selectCategory(name: string): void { this.category.set(this.category() === name ? 'Todas' : name); }
   addSingleToCart(item: MenuItem): void { this.addToCart.emit([item]); }
+  openProduct(item: MenuItem): void { this.selectedProduct.set(this.promotions.itemForCart(item)); }
   openStore(restaurant: Restaurant): void { this.activeStore.set(restaurant.name); this.menuQuery.set(''); this.navigate.emit('storefront'); }
   toggleFavorite(name: string): void { this.favorites.update(items => items.includes(name) ? items.filter(item => item !== name) : [...items, name]); }
   deliveryTime(name: string): string { return deliveryEstimate(name); }

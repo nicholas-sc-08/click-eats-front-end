@@ -32,3 +32,4 @@ app-root{--ink:#252b28;--muted:#747b75;--line:#e8ebe6;--paper:#f7f8f5;--coral:#1
 .cart-totals .discount-line b{color:#29765e}
 @keyframes coupon-in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
 @media(max-height:760px){.cart-panel{padding-top:16px;padding-bottom:12px}.cart-heading{padding-bottom:10px}.cart-recommend{padding:8px 0}.cart-totals{padding:8px 0 4px}.cart-help{padding-top:6px}}
+.cart-item-info .sale-price{color:#28765c}.cart-item-info .cart-deal-note{margin-top:4px;color:#28765c;font-size:8px;font-weight:700}
