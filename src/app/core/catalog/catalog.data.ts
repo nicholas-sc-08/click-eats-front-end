@@ -1,4 +1,4 @@
-import { MenuItem, Restaurant } from '../../../models/catalog.models';
+import { MenuItem, Restaurant } from '../../models/catalog.models';
 
 export const RESTAURANTS: Restaurant[] = [
   { name: 'Brasa & Ponto', desc: 'Hambúrguer artesanal · Pinheiros', price: 38.9, image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=1100&q=85', tag: 'MAIS PEDIDO', rating: '4,9' },

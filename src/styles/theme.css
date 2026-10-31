@@ -1,0 +1,319 @@
+/* The light palette is the default; this class only adds the optional dark palette. */
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 6px 9px;
+  border: 1px solid var(--line, #e8ebe6);
+  border-radius: 8px;
+  background: transparent;
+  color: #657168;
+  font-size: 10px;
+  cursor: pointer;
+  transition: color 180ms, background 180ms, border-color 180ms, transform 180ms;
+}
+
+.theme-toggle:hover { transform: translateY(-1px); background: #f2f6f2; color: #26765f; }
+.theme-toggle > span:first-child { font-size: 14px; line-height: 1; }
+
+.app-shell.dark-theme {
+  --ink: #e8eee8;
+  --muted: #a4b1a6;
+  --line: #2b3a31;
+  --paper: #0d1512;
+  --coral: #76d3ac;
+  --soft: #1d3429;
+  color: #e8eee8;
+  background: #0d1512;
+  color-scheme: dark;
+}
+
+.app-shell.dark-theme .main-area { background: radial-gradient(ellipse at 35% -12%,#1c3327 0,transparent 43%),#0d1512; color: #e8eee8; }
+.app-shell.dark-theme .sidebar,
+.app-shell.dark-theme .topbar,
+.app-shell.dark-theme .cart-panel {
+  border-color: #2b3a31;
+  background: linear-gradient(160deg,#18271f,#131e18);
+  color: #e8eee8;
+}
+
+.app-shell.dark-theme .topbar { box-shadow: 0 4px 14px #08100b25; }
+.app-shell.dark-theme .topbar button:not(.theme-toggle) { color: #c0cdc2; }
+.app-shell.dark-theme .topbar .theme-toggle { border-color: #3b5144; background: #22352a; color: #d7eadb; }
+.app-shell.dark-theme .topbar .theme-toggle:hover { background: #2b4435; }
+.app-shell.dark-theme .brand,
+.app-shell.dark-theme .side-bottom b,
+.app-shell.dark-theme .location b,
+.app-shell.dark-theme .cart-heading h2,
+.app-shell.dark-theme .cart-totals .grand-total,
+.app-shell.dark-theme .cart-totals b { color: #e8eee8; }
+.app-shell.dark-theme .brand small,
+.app-shell.dark-theme .location small,
+.app-shell.dark-theme .side-label,
+.app-shell.dark-theme .side-bottom small { color: #87978b; }
+.app-shell.dark-theme .side-link { color: #acb9ad; }
+.app-shell.dark-theme .side-link.active { background: #233c2e; color: #a7ddbd; }
+.app-shell.dark-theme .workspace-badge,
+.app-shell.dark-theme .role-sidebar-note { border-color: #304338; background: #1d2d23; }
+.app-shell.dark-theme .workspace-badge b,
+.app-shell.dark-theme .role-sidebar-note b { color: #dce9dc; }
+.app-shell.dark-theme .workspace-badge small,
+.app-shell.dark-theme .role-sidebar-note p { color: #93a295; }
+.app-shell.dark-theme .switch-account { border-color: #36483c; background: #1c2a21; color: #c0cdc2; }
+
+.app-shell.dark-theme .content h1,
+.app-shell.dark-theme .content h2,
+.app-shell.dark-theme .content h3,
+.app-shell.dark-theme .content h4,
+.app-shell.dark-theme .content b,
+.app-shell.dark-theme .content strong,
+.app-shell.dark-theme .content label,
+.app-shell.dark-theme .content .subheading { color: #e1eae2; }
+.app-shell.dark-theme .content .eyebrow,
+.app-shell.dark-theme .content p,
+.app-shell.dark-theme .content small { color: #9aa99d; }
+.app-shell.dark-theme .panel,
+.app-shell.dark-theme .stat-card,
+.app-shell.dark-theme .restaurant-card,
+.app-shell.dark-theme .category-card,
+.app-shell.dark-theme .purchase-card,
+.app-shell.dark-theme .coupon-card,
+.app-shell.dark-theme .profile-card,
+.app-shell.dark-theme .review-panel,
+.app-shell.dark-theme .search-row,
+.app-shell.dark-theme .cart-item,
+.app-shell.dark-theme .empty-cart,
+.app-shell.dark-theme .date-row {
+  border-color: #2b3a31;
+  background: linear-gradient(145deg,#1c2b22,#17231c);
+  color: #e1eae2;
+}
+
+.app-shell.dark-theme .search-row input,
+.app-shell.dark-theme .profile-fields input,
+.app-shell.dark-theme .coupon-input input,
+.app-shell.dark-theme .review-panel textarea,
+.app-shell.dark-theme .auth-label input,
+.app-shell.dark-theme input,
+.app-shell.dark-theme select,
+.app-shell.dark-theme textarea {
+  border-color: #35483b;
+  background-color: #152019;
+  color: #e5eee6;
+}
+
+.app-shell.dark-theme input::placeholder,
+.app-shell.dark-theme textarea::placeholder { color: #7e8e82; }
+.app-shell.dark-theme .cart-panel .cart-recommend,
+.app-shell.dark-theme .cart-panel .cart-totals,
+.app-shell.dark-theme .cart-panel .cart-divider { border-color: #2b3a31; }
+.app-shell.dark-theme .cart-panel .cart-heading { border-color: #2b3a31; }
+.app-shell.dark-theme .cart-panel .cart-help b,
+.app-shell.dark-theme .cart-panel .cart-item-info b,
+.app-shell.dark-theme .cart-panel .empty-cart h3 { color: #e1eae2; }
+.app-shell.dark-theme .cart-panel .cart-help small,
+.app-shell.dark-theme .cart-panel .cart-item-info small,
+.app-shell.dark-theme .cart-panel .cart-totals > div { color: #9aa99d; }
+.app-shell.dark-theme .footer { border-color: #2b3a31; color: #819084; }
+
+/* Analytics panel: keep enough selector weight to override its component-scoped light styles. */
+.app-shell.dark-theme .analytics-shell .metric-card,
+.app-shell.dark-theme .analytics-shell .chart-card,
+.app-shell.dark-theme .analytics-shell .management-card {
+  border-color: #2b3d32;
+  background: #19251e;
+  color: #e4ece5;
+  box-shadow: 0 7px 22px #050b0730;
+}
+
+.app-shell.dark-theme .analytics-shell .analytics-intro h2,
+.app-shell.dark-theme .analytics-shell .metric-card > b,
+.app-shell.dark-theme .analytics-shell .chart-heading h3,
+.app-shell.dark-theme .analytics-shell .chart-total,
+.app-shell.dark-theme .analytics-shell .composition-footer b,
+.app-shell.dark-theme .analytics-shell .composition-legend b,
+.app-shell.dark-theme .analytics-shell .account-name,
+.app-shell.dark-theme .analytics-shell .product-label > b { color: #e1eae2; }
+.app-shell.dark-theme .analytics-shell .analytics-intro p,
+.app-shell.dark-theme .analytics-shell .metric-card > small,
+.app-shell.dark-theme .analytics-shell .metric-foot,
+.app-shell.dark-theme .analytics-shell .chart-heading p,
+.app-shell.dark-theme .analytics-shell .composition-footer,
+.app-shell.dark-theme .analytics-shell .composition-legend span,
+.app-shell.dark-theme .analytics-shell .account-row,
+.app-shell.dark-theme .analytics-shell .demo-caption { color: #a0afa3; }
+.app-shell.dark-theme .analytics-shell .period-control,
+.app-shell.dark-theme .analytics-shell .chart-guides,
+.app-shell.dark-theme .analytics-shell .chart-labels { color: #8b9a8e; }
+.app-shell.dark-theme .analytics-shell .period-control select,
+.app-shell.dark-theme .analytics-shell .entity-switch,
+.app-shell.dark-theme .analytics-shell .management-tabs { border-color: #33463a; background: #152019; color: #c4d0c5; }
+.app-shell.dark-theme .analytics-shell .entity-switch button { color: #a8b6aa; }
+.app-shell.dark-theme .analytics-shell .entity-switch button.active { background: #294332; color: #b2e1c0; }
+.app-shell.dark-theme .analytics-shell .line-chart { border-color: #35473a; background: repeating-linear-gradient(to bottom, transparent 0, transparent 37px, #2b3b30 38px, #2b3b30 39px); }
+.app-shell.dark-theme .analytics-shell .donut > div { background: #19251e; }
+.app-shell.dark-theme .analytics-shell .table-head { background: #202e25; color: #9eada0; }
+.app-shell.dark-theme .analytics-shell .account-row,
+.app-shell.dark-theme .analytics-shell .composition-footer,
+.app-shell.dark-theme .analytics-shell .product-bar-row { border-color: #2b3a31; }
+.app-shell.dark-theme .analytics-shell .account-name > span { background: #294332; color: #b4dfbf; }
+.app-shell.dark-theme .analytics-shell .account-status { background: #254331; color: #afe0bd; }
+.app-shell.dark-theme .analytics-shell .account-status.pending { background: #4b3922; color: #f0c988; }
+.app-shell.dark-theme .analytics-shell .view-account,
+.app-shell.dark-theme .analytics-shell .export-note { border-color: #36513f; background: #22372a; color: #b9e0c2; }
+.app-shell.dark-theme .analytics-shell .view-account:hover,
+.app-shell.dark-theme .analytics-shell .export-note:hover { background: #2b4734; }
+.app-shell.dark-theme .analytics-shell .product-bar { background: #27372d; }
+.app-shell.dark-theme .analytics-shell .product-label > span { background: #31352a; }
+.app-shell.dark-theme .analytics-shell .product-label small { color: #a0afa3; }
+.app-shell.dark-theme .account-dialog { border-color: #35483b; background: #19251e; color: #e1eae2; }
+.app-shell.dark-theme .account-dialog h2,
+.app-shell.dark-theme .account-dialog .account-detail-grid b { color: #e1eae2; }
+.app-shell.dark-theme .account-dialog > p,
+.app-shell.dark-theme .account-dialog .account-detail-grid span { color: #a0afa3; }
+.app-shell.dark-theme .account-dialog .account-detail-grid { background: #202e25; }
+.app-shell.dark-theme .account-dialog .dialog-close { background: #26372c; color: #d3e0d4; }
+
+/* Delivery and report screens follow the same theme as the rest of the workspace. */
+.app-shell.dark-theme app-delivery-fees .fee-config-card,
+.app-shell.dark-theme app-delivery-fees .model-card,
+.app-shell.dark-theme app-delivery-fees .platform-selected {
+  border-color: #2c3d32;
+  background: #19251e;
+  color: #e1eae2;
+}
+.app-shell.dark-theme app-delivery-fees .delivery-header h1,
+.app-shell.dark-theme app-delivery-fees .config-heading h2,
+.app-shell.dark-theme app-delivery-fees .rules-heading h3,
+.app-shell.dark-theme app-delivery-fees .rule-description b,
+.app-shell.dark-theme app-delivery-fees .model-copy b { color: #e1eae2; }
+.app-shell.dark-theme app-delivery-fees .delivery-header p,
+.app-shell.dark-theme app-delivery-fees .config-heading p,
+.app-shell.dark-theme app-delivery-fees .rules-heading p,
+.app-shell.dark-theme app-delivery-fees .rule-description small,
+.app-shell.dark-theme app-delivery-fees .model-copy small { color: #a0afa3; }
+.app-shell.dark-theme app-delivery-fees .config-summary > div,
+.app-shell.dark-theme app-delivery-fees .config-summary > label,
+.app-shell.dark-theme app-delivery-fees .fee-note,
+.app-shell.dark-theme app-delivery-fees .rule-icon { border-color: #2d4034; background: #202e25; }
+.app-shell.dark-theme app-delivery-fees .config-summary b,
+.app-shell.dark-theme app-delivery-fees .platform-selected b { color: #e1eae2; }
+.app-shell.dark-theme app-delivery-fees .config-summary small,
+.app-shell.dark-theme app-delivery-fees .delivery-footnote,
+.app-shell.dark-theme app-delivery-fees .platform-selected p { color: #9aab9e; }
+.app-shell.dark-theme app-delivery-fees .rule-row,
+.app-shell.dark-theme app-delivery-fees .config-heading,
+.app-shell.dark-theme app-delivery-fees .rules-heading { border-color: #2b3a31; }
+.app-shell.dark-theme app-delivery-fees .new-rule { border-color: #304639; background: #1d2b22; }
+.app-shell.dark-theme app-reports-panel .report-page,
+.app-shell.dark-theme app-reports-panel .panel { color: #e1eae2; }
+.app-shell.dark-theme app-reports-panel .report-filters,
+.app-shell.dark-theme app-reports-panel .report-results { border-color: #2b3a31; background: #19251e; }
+.app-shell.dark-theme app-reports-panel h1,
+.app-shell.dark-theme app-reports-panel h2,
+.app-shell.dark-theme app-reports-panel th { color: #e1eae2; }
+.app-shell.dark-theme app-reports-panel p,
+.app-shell.dark-theme app-reports-panel label,
+.app-shell.dark-theme app-reports-panel td { color: #a0afa3; }
+.app-shell.dark-theme app-reports-panel select,
+.app-shell.dark-theme app-reports-panel input { border-color: #35483b; background: #152019; color: #e5eee6; }
+
+@media (max-width: 760px) {
+  .theme-toggle-label { display: none; }
+  .theme-toggle { width: 32px; padding: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle { transition-duration: .01ms; }
+}
+
+/* Refined evergreen night palette: warm surfaces, quiet borders and clear mint actions. */
+.app-shell.dark-theme .analytics-shell .metric-card,
+.app-shell.dark-theme .analytics-shell .chart-card,
+.app-shell.dark-theme .analytics-shell .management-card,
+.app-shell.dark-theme .panel,
+.app-shell.dark-theme .stat-card,
+.app-shell.dark-theme .restaurant-card,
+.app-shell.dark-theme .category-card,
+.app-shell.dark-theme .purchase-card,
+.app-shell.dark-theme .coupon-card,
+.app-shell.dark-theme .profile-card,
+.app-shell.dark-theme .review-panel {
+  background: linear-gradient(145deg,#1d2d23,#17241d);
+  border-color: #35483b;
+  box-shadow: 0 14px 34px #030a062b, inset 0 1px #ffffff08;
+}
+.app-shell.dark-theme .analytics-shell .chart-heading h3,
+.app-shell.dark-theme .analytics-shell .analytics-intro h2 { color:#f0f6f0; }
+.app-shell.dark-theme .analytics-shell .entity-switch button.active,
+.app-shell.dark-theme .analytics-shell .management-tabs button.active { background:#244936;color:#b7f0ce;border-color:#3c7655; }
+.app-shell.dark-theme .active-delivery-card { background:linear-gradient(110deg,#1d382b,#1b2c22 78%,#20382a);border-color:#3a674e; }
+.app-shell.dark-theme .delivery-copy strong { color:#e2f5e9; }
+.app-shell.dark-theme .delivery-copy small,.app-shell.dark-theme .delivery-cta { color:#9fdbb7; }
+.app-shell.dark-theme .delivery-copy>span { color:#b0c7b7; }
+.app-shell.dark-theme .delivery-icon { background:#294a36;color:#a5e5bd; }
+.app-shell.dark-theme .account-dialog { background:linear-gradient(145deg,#1e2e24,#17231c);border-color:#3b5143; }
+.app-shell.dark-theme .account-dialog input,.app-shell.dark-theme .account-dialog select { background:#111c16;border-color:#354a3b;color:#edf5ee; }
+.app-shell.dark-theme .account-management { background:linear-gradient(145deg,#1d2d23,#17241d);border-color:#35483b;box-shadow:0 14px 34px #030a062b,inset 0 1px #ffffff08; }
+.app-shell.dark-theme .account-management .table-head,.app-shell.dark-theme .account-management .account-row { border-color:#34483a;color:#dce9df; }
+.app-shell.dark-theme .account-management .account-search,.app-shell.dark-theme .account-management .entity-switch button,.app-shell.dark-theme .account-management .row-actions button { background:#15221a;border-color:#354a3b;color:#d6e5d8; }
+.app-shell.dark-theme .account-management .entity-switch button.active { background:#244936;color:#b7f0ce;border-color:#3c7655; }
+.app-shell.dark-theme .account-management .account-search input { color:#e6f1e8; }
+.app-shell.dark-theme .account-management .management-foot,.app-shell.dark-theme .account-management .account-name small,.app-shell.dark-theme .account-management .contact-cell small { color:#9aab9e; }
+.app-shell.dark-theme app-restaurant-reviews .review-summary,.app-shell.dark-theme app-restaurant-reviews .review-card { background:linear-gradient(145deg,#1d2d23,#17241d);border-color:#35483b; }
+.app-shell.dark-theme app-restaurant-reviews .rating-score strong,.app-shell.dark-theme app-restaurant-reviews .review-list-head h2,.app-shell.dark-theme app-restaurant-reviews .review-top,.app-shell.dark-theme app-restaurant-reviews .review-content>p { color:#e5eee6; }
+.app-shell.dark-theme app-restaurant-reviews .review-highlights,.app-shell.dark-theme app-restaurant-reviews .merchant-reply { background:#23392b; }
+.app-shell.dark-theme app-restaurant-reviews .review-highlights b,.app-shell.dark-theme app-restaurant-reviews .merchant-reply b { color:#b3e4c1; }
+.app-shell.dark-theme app-restaurant-reviews .bar { background:#314136; }
+.app-shell.dark-theme app-restaurant-reviews select,.app-shell.dark-theme app-restaurant-reviews .reply-editor { background:#15221a;border-color:#354a3b;color:#e5eee6; }
+.app-shell.dark-theme app-restaurant-reviews .reply-editor input { background:transparent;color:#e5eee6; }
+.app-shell.dark-theme app-restaurant-profile .profile-form input,.app-shell.dark-theme app-restaurant-profile .upload-button { background:#15221a;border-color:#354a3b;color:#e5eee6; }
+.app-shell.dark-theme app-restaurant-profile .logo-upload-row,.app-shell.dark-theme app-restaurant-profile .profile-save { border-color:#35483b; }
+.app-shell.dark-theme app-restaurant-profile .profile-form label { color:#d8e5da; }
+.app-shell.dark-theme .stock-limit,.app-shell.dark-theme .stock-count { color:#b2c2b5; }
+.app-shell.dark-theme .stock-count input { background:#15221a;border-color:#354a3b;color:#e5eee6; }
+
+/* Neutral charcoal dark mode: keep ClickEat green for brand actions only. */
+.app-shell.dark-theme {
+  --ink:#f0f1f3;
+  --muted:#a1a6af;
+  --line:#2a2e35;
+  --paper:#0c0e11;
+  --coral:#43c294;
+  --soft:#1b3029;
+  color:#eceef1;
+  background:#0c0e11;
+}
+.app-shell.dark-theme .main-area { background:radial-gradient(ellipse at 50% -20%,#1b1e24 0,transparent 45%),#0c0e11;color:#eceef1; }
+.app-shell.dark-theme .sidebar,.app-shell.dark-theme .topbar,.app-shell.dark-theme .cart-panel { background:#111317;border-color:#292d34;color:#eceef1; }
+.app-shell.dark-theme .panel,.app-shell.dark-theme .stat-card,.app-shell.dark-theme .restaurant-card,.app-shell.dark-theme .category-card,.app-shell.dark-theme .purchase-card,.app-shell.dark-theme .coupon-card,.app-shell.dark-theme .profile-card,.app-shell.dark-theme .review-panel,.app-shell.dark-theme .search-row,.app-shell.dark-theme .cart-item,.app-shell.dark-theme .empty-cart,.app-shell.dark-theme .date-row,.app-shell.dark-theme .analytics-shell .metric-card,.app-shell.dark-theme .analytics-shell .chart-card,.app-shell.dark-theme .analytics-shell .management-card,.app-shell.dark-theme .account-management { background:#171a1f;border-color:#2b3038;color:#e7e9ed;box-shadow:0 12px 28px #00000025; }
+.app-shell.dark-theme input,.app-shell.dark-theme select,.app-shell.dark-theme textarea,.app-shell.dark-theme .account-search,.app-shell.dark-theme .entity-switch button,.app-shell.dark-theme .account-management .row-actions button { background:#111317;border-color:#30353d;color:#e7e9ed; }
+.app-shell.dark-theme .topbar button:not(.theme-toggle),.app-shell.dark-theme .side-link { color:#c1c5cc; }
+.app-shell.dark-theme .topbar .theme-toggle,.app-shell.dark-theme .switch-account { background:#1c2026;border-color:#343a43;color:#e0e3e8; }
+.app-shell.dark-theme .side-link.active,.app-shell.dark-theme .analytics-shell .entity-switch button.active,.app-shell.dark-theme .account-management .entity-switch button.active { background:#1c332b;border-color:#315543;color:#9ce2c1; }
+.app-shell.dark-theme .account-name>span,.app-shell.dark-theme .delivery-icon { background:#202a30;color:#8bdab5; }
+.app-shell.dark-theme .active-delivery-card { background:linear-gradient(110deg,#1b2221,#191d21 78%,#202522);border-color:#38423f; }
+.app-shell.dark-theme .delivery-copy strong { color:#f0f1f3; }
+.app-shell.dark-theme .delivery-copy small,.app-shell.dark-theme .delivery-cta { color:#86d8b0; }
+.app-shell.dark-theme .delivery-copy>span { color:#b0b5be; }
+.app-shell.dark-theme .account-dialog,.app-shell.dark-theme .analytics-shell .account-dialog { background:#191c21;border-color:#363b44;color:#eceef1; }
+.app-shell.dark-theme .analytics-shell .line-chart { border-color:#30353d;background:repeating-linear-gradient(to bottom,transparent 0,transparent 37px,#292e35 38px,#292e35 39px); }
+.app-shell.dark-theme .analytics-shell .donut>div { background:#171a1f; }
+.app-shell.dark-theme .analytics-shell .table-head { background:#20242a;color:#aeb3bc; }
+.app-shell.dark-theme .analytics-shell .product-bar { background:#2b3037; }
+.app-shell.dark-theme .analytics-shell .account-status { background:#1c3329;color:#9ce2bd; }
+.app-shell.dark-theme .analytics-shell .account-status.pending { background:#3b3020;color:#f0c988; }
+.app-shell.dark-theme .analytics-shell .view-account,.app-shell.dark-theme .analytics-shell .export-note { background:#20252a;border-color:#3a4249;color:#a4dfbf; }
+.app-shell.dark-theme app-restaurant-reviews .review-summary,.app-shell.dark-theme app-restaurant-reviews .review-card { background:#171a1f;border-color:#2b3038; }
+.app-shell.dark-theme app-restaurant-reviews .review-highlights,.app-shell.dark-theme app-restaurant-reviews .merchant-reply { background:#20252a; }
+.app-shell.dark-theme app-restaurant-reviews .review-highlights b,.app-shell.dark-theme app-restaurant-reviews .merchant-reply b { color:#a9dfbf; }
+.app-shell.dark-theme app-restaurant-reviews .bar { background:#30353d; }
+.app-shell.dark-theme app-restaurant-reviews .reply-editor,.app-shell.dark-theme app-restaurant-reviews select { background:#111317;border-color:#30353d;color:#e7e9ed; }
+.app-shell.dark-theme app-restaurant-profile .profile-cover { filter:saturate(.72); }
+.app-shell.dark-theme app-restaurant-profile .profile-form input,.app-shell.dark-theme app-restaurant-profile .upload-button,.app-shell.dark-theme .stock-count input { background:#111317;border-color:#30353d;color:#e7e9ed; }
+.app-shell.dark-theme app-restaurant-profile .logo-upload-row,.app-shell.dark-theme app-restaurant-profile .profile-save { border-color:#2b3038; }
+.app-shell.dark-theme app-delivery-fees .fee-config-card,.app-shell.dark-theme app-delivery-fees .model-card,.app-shell.dark-theme app-delivery-fees .platform-selected,.app-shell.dark-theme app-reports-panel .report-filters,.app-shell.dark-theme app-reports-panel .report-results { background:#171a1f;border-color:#2b3038;color:#e7e9ed; }
+.app-shell.dark-theme app-delivery-fees .config-summary>div,.app-shell.dark-theme app-delivery-fees .config-summary>label,.app-shell.dark-theme app-delivery-fees .fee-note,.app-shell.dark-theme app-delivery-fees .rule-icon,.app-shell.dark-theme app-delivery-fees .new-rule { background:#20242a;border-color:#323740; }
+.app-shell.dark-theme .footer { border-color:#292d34;color:#878d97; }
