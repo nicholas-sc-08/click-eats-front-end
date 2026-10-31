@@ -38,6 +38,18 @@ Important current UX details:
 - Analytics period selectors and admin entity selectors change the demo chart presentation. These are not connected to Power BI or a live analytics source.
 - Google sign-in, real payment/Pix creation, authorization, account recovery, and transactional order operations require backend/provider integration; never describe the current front-end demo as processing real purchases.
 
+## Current implementation notes (2026-10-31)
+
+- The current branch is `feature/clickeat-first-experience`. The favorites milestone is already committed as `feat: add customer favorites and search empty state.`; do not amend it when continuing the next milestone.
+- `package.json` currently contains Angular 22, Tailwind CSS 4 and RxJS. It does **not** contain Spartan UI packages. Until the dependency is deliberately added and integrated, follow the app's custom CSS and inline SVG patterns; do not describe existing screens as Spartan components.
+- `MenuCatalogService` owns the Brasa & Ponto demo menu in `clickeat.menu.brasa-ponto`; store edits and ordering are reflected by the customer catalog and saved to local storage. `InventoryService` owns limited availability in `clickeat.inventory`. Both listen for same-origin browser storage events so other tabs in this browser profile refresh without a page reload.
+- `StoreMenuManagementComponent` owns the store's product editor and ordering controls. The catalog supports adding, editing, removing (with confirmation), drag ordering, keyboard-friendly move buttons, and explicit stock limit/quantity controls. These are local demo changes, not shared between devices or accounts.
+- `OrderTrackingDemoService` drives the shared demo ETA in the customer home banner and tracking page. Its countdown is accelerated for the prototype; route, courier location, ETA and completion are not GPS or server updates.
+- Admin and restaurant chart points expose a keyboard-focusable SVG detail popover. The underlying chart values remain seeded demonstration data.
+- The customer profile form saves demo details to `clickeat.customer-profile`. It does not update an authenticated account.
+- Real multi-user live updates require a backend event transport, such as NestJS WebSockets (Socket.IO or `ws`) or SSE, with authenticated room/topic subscriptions and persisted order/catalog state. Keep frontend demo persistence behind services so those services can later be replaced by API and realtime adapters. Do not claim BroadcastChannel/localStorage synchronization is server realtime.
+- Angular 22 requires Node.js 22.22.3 or newer (or 24.15.0 / 26+). The default shell may still select Node 20; use the installed supported Node version when building.
+
 ## Visual identity and UI/UX rules
 
 ### Brand

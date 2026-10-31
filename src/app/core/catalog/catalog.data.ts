@@ -7,6 +7,9 @@ export const RESTAURANTS: Restaurant[] = [
   { name: 'Quintal Brasileiro', desc: 'Comida brasileira · Sumaré', price: 34.9, image: 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1100&q=85', tag: 'BEM AVALIADO', rating: '4,7' },
   { name: 'Doce Estação', desc: 'Doceria artesanal · Vila Madalena', price: 24.9, image: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=1100&q=85', tag: 'DOCES ARTESANAIS', rating: '4,9' },
   { name: 'Verde Perto', desc: 'Comida leve · Pinheiros', price: 32.9, image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1100&q=85', tag: 'LEVE E FRESCO', rating: '4,8' },
+  { name: 'Cantina do Sol', desc: 'Massas artesanais · Vila Mariana', price: 42.9, image: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=1100&q=85', tag: 'MASSA FRESCA', rating: '4,8' },
+  { name: 'Taco Nativo', desc: 'Comida mexicana · Pinheiros', price: 36.9, image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=1100&q=85', tag: 'SABOR MEXICANO', rating: '4,9' },
+  { name: 'Açaí Lab', desc: 'Açaí e frutas · Vila Madalena', price: 22.9, image: 'https://images.unsplash.com/photo-1590301157890-4810ed352733?auto=format&fit=crop&w=1100&q=85', tag: 'FEITO NA HORA', rating: '4,9' },
 ];
 
 export const MENU_BY_RESTAURANT: Record<string, MenuItem[]> = {
@@ -40,6 +43,21 @@ export const MENU_BY_RESTAURANT: Record<string, MenuItem[]> = {
     { name: 'Frango & quinoa', desc: 'Frango grelhado, quinoa, legumes assados e molho de ervas.', price: 38.9, image: 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=500&q=85', tag: 'PROTEÍNA' },
     { name: 'Suco verde', desc: 'Abacaxi, hortelã, couve e limão espremido na hora.', price: 14.9, image: 'https://images.unsplash.com/photo-1610970881699-44a5587cabec?auto=format&fit=crop&w=500&q=85', tag: 'NATURAL' },
   ],
+  'Cantina do Sol': [
+    { name: 'Nhoque de mandioquinha', desc: 'Nhoque macio com molho de tomate assado e parmesão.', price: 39.9, image: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=500&q=85', tag: 'MASSA DA CASA' },
+    { name: 'Ravioli de ricota', desc: 'Massa fresca recheada com ricota, espinafre e manteiga de sálvia.', price: 44.9, image: 'https://images.unsplash.com/photo-1473093295043-cdd812d0e601?auto=format&fit=crop&w=500&q=85', tag: 'FEITO À MÃO' },
+    { name: 'Tiramisu clássico', desc: 'Camadas de mascarpone, café espresso e cacau.', price: 18.9, image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&fit=crop&w=500&q=85', tag: 'SOBREMESA' },
+  ],
+  'Taco Nativo': [
+    { name: 'Tacos de carnitas', desc: 'Porco desfiado, pico de gallo e limão em tortillas de milho.', price: 32.9, image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=500&q=85', tag: 'MAIS PEDIDO' },
+    { name: 'Burrito de cogumelos', desc: 'Arroz, feijão, cogumelos salteados e guacamole fresco.', price: 34.9, image: 'https://images.unsplash.com/photo-1626700051175-6818013e1d4f?auto=format&fit=crop&w=500&q=85', tag: 'VEGETARIANO' },
+    { name: 'Churros com doce de leite', desc: 'Churros quentinhos com doce de leite artesanal.', price: 16.9, image: 'https://images.unsplash.com/photo-1624371414361-e670edf4898d?auto=format&fit=crop&w=500&q=85', tag: 'DOCINHO' },
+  ],
+  'Açaí Lab': [
+    { name: 'Açaí clássico 500 ml', desc: 'Açaí cremoso, banana, granola crocante e mel.', price: 24.9, image: 'https://images.unsplash.com/photo-1590301157890-4810ed352733?auto=format&fit=crop&w=500&q=85', tag: 'CLÁSSICO' },
+    { name: 'Açaí com morango', desc: 'Açaí batido com morango, leite em pó e granola.', price: 27.9, image: 'https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?auto=format&fit=crop&w=500&q=85', tag: 'FRUTAS FRESCAS' },
+    { name: 'Tigela tropical', desc: 'Açaí, manga, kiwi, coco e sementes.', price: 29.9, image: 'https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38?auto=format&fit=crop&w=500&q=85', tag: 'LEVE E FRESCA' },
+  ],
 };
 
 export function deliveryEstimate(name: string): string {
@@ -54,5 +72,8 @@ export function restaurantEmoji(name: string): string {
   if (name === 'Casa Nori') return '🍣';
   if (name === 'Doce Estação') return '🍰';
   if (name === 'Verde Perto') return '🥗';
+  if (name === 'Cantina do Sol') return '🍝';
+  if (name === 'Taco Nativo') return '🌮';
+  if (name === 'Açaí Lab') return '🫐';
   return '🍲';
 }
