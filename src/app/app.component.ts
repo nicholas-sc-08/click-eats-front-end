@@ -44,7 +44,7 @@ import { WorkspaceRole, WorkspaceSection } from './models/workspace.models';
       <app-order-tracking (back)="view.set('orders')" (contact)="notices.info('O contato com o entregador será conectado ao backend.')" />
     } @else if (view()==='checkout') {
       <app-checkout [items]="cart()" [appliedCouponCode]="appliedCouponCode()" (back)="view.set('home')" (confirmed)="completeOrder()" />
-    } @else if (view()==='home' || view()==='storefront' || view()==='favorites') {
+    } @else if (view()==='home' || view()==='storefront' || view()==='favorites' || view()==='restaurants') {
       <app-customer-catalog [view]="view()" (navigate)="view.set($event)" (addToCart)="addMany($event)" (couponRequest)="view.set('coupons')" />
     } @else {
       <app-customer-account [view]="view()" [appliedCouponCode]="appliedCouponCode()" (couponApply)="applyCoupon($event)" (navigate)="view.set($event)" />
@@ -61,7 +61,7 @@ import { WorkspaceRole, WorkspaceSection } from './models/workspace.models';
 export class AppComponent {
  readonly notices = inject(NotificationService);
  readonly isDarkTheme = signal(this.readSavedTheme());
- readonly view = signal<'home'|'storefront'|'favorites'|'coupons'|'orders'|'auth'|'reviews'|'profile'|'checkout'|'tracking'>('home');
+ readonly view = signal<'home'|'storefront'|'favorites'|'restaurants'|'coupons'|'orders'|'auth'|'reviews'|'profile'|'checkout'|'tracking'>('home');
  readonly role = signal<'customer'|'admin'|'store'|'courier'>('customer');
  readonly workspaceRole = computed<WorkspaceRole>(() => {
    const currentRole = this.role();

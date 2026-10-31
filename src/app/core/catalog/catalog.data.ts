@@ -1,15 +1,15 @@
 import { MenuItem, Restaurant } from '../../models/catalog.models';
 
 export const RESTAURANTS: Restaurant[] = [
-  { name: 'Brasa & Ponto', desc: 'Hambúrguer artesanal · Pinheiros', price: 38.9, image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=1100&q=85', tag: 'MAIS PEDIDO', rating: '4,9' },
-  { name: 'Forno da Vila', desc: 'Pizza napolitana · Vila Madalena', price: 46.5, image: 'https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?auto=format&fit=crop&w=1100&q=85', tag: 'FRETE GRÁTIS', rating: '4,8' },
-  { name: 'Casa Nori', desc: 'Japonesa contemporânea · Pinheiros', price: 52, image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=1100&q=85', tag: 'NOVO NO BAIRRO', rating: '4,9' },
-  { name: 'Quintal Brasileiro', desc: 'Comida brasileira · Sumaré', price: 34.9, image: 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1100&q=85', tag: 'BEM AVALIADO', rating: '4,7' },
-  { name: 'Doce Estação', desc: 'Doceria artesanal · Vila Madalena', price: 24.9, image: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=1100&q=85', tag: 'DOCES ARTESANAIS', rating: '4,9' },
-  { name: 'Verde Perto', desc: 'Comida leve · Pinheiros', price: 32.9, image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1100&q=85', tag: 'LEVE E FRESCO', rating: '4,8' },
-  { name: 'Cantina do Sol', desc: 'Massas artesanais · Vila Mariana', price: 42.9, image: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=1100&q=85', tag: 'MASSA FRESCA', rating: '4,8' },
-  { name: 'Taco Nativo', desc: 'Comida mexicana · Pinheiros', price: 36.9, image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=1100&q=85', tag: 'SABOR MEXICANO', rating: '4,9' },
-  { name: 'Açaí Lab', desc: 'Açaí e frutas · Vila Madalena', price: 22.9, image: 'https://images.unsplash.com/photo-1590301157890-4810ed352733?auto=format&fit=crop&w=1100&q=85', tag: 'FEITO NA HORA', rating: '4,9' },
+  { name: 'Brasa & Ponto', category: 'Hambúrguer', desc: 'Hambúrguer artesanal · Pinheiros', price: 38.9, image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=1100&q=85', tag: 'MAIS PEDIDO', rating: '4,9' },
+  { name: 'Forno da Vila', category: 'Pizza', desc: 'Pizza napolitana · Vila Madalena', price: 46.5, image: 'https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?auto=format&fit=crop&w=1100&q=85', tag: 'FRETE GRÁTIS', rating: '4,8' },
+  { name: 'Casa Nori', category: 'Japonesa', desc: 'Japonesa contemporânea · Pinheiros', price: 52, image: 'https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=1100&q=85', tag: 'NOVO NO BAIRRO', rating: '4,9' },
+  { name: 'Quintal Brasileiro', category: 'Brasileira', desc: 'Comida brasileira · Sumaré', price: 34.9, image: 'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1100&q=85', tag: 'BEM AVALIADO', rating: '4,7' },
+  { name: 'Doce Estação', category: 'Doces', desc: 'Doceria artesanal · Vila Madalena', price: 24.9, image: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=1100&q=85', tag: 'DOCES ARTESANAIS', rating: '4,9' },
+  { name: 'Verde Perto', category: 'Saudável', desc: 'Comida leve · Pinheiros', price: 32.9, image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=1100&q=85', tag: 'LEVE E FRESCO', rating: '4,8' },
+  { name: 'Cantina do Sol', category: 'Massas', desc: 'Massas artesanais · Vila Mariana', price: 42.9, image: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=1100&q=85', tag: 'MASSA FRESCA', rating: '4,8' },
+  { name: 'Taco Nativo', category: 'Mexicana', desc: 'Comida mexicana · Pinheiros', price: 36.9, image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?auto=format&fit=crop&w=1100&q=85', tag: 'SABOR MEXICANO', rating: '4,9' },
+  { name: 'Açaí Lab', category: 'Açaí', desc: 'Açaí e frutas · Vila Madalena', price: 22.9, image: 'https://images.unsplash.com/photo-1590301157890-4810ed352733?auto=format&fit=crop&w=1100&q=85', tag: 'FEITO NA HORA', rating: '4,9' },
 ];
 
 export const MENU_BY_RESTAURANT: Record<string, MenuItem[]> = {

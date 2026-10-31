@@ -49,6 +49,7 @@ Important current UX details:
 - Admin and restaurant chart points expose a keyboard-focusable SVG detail popover. The underlying chart values remain seeded demonstration data.
 - Admin overview account details use `AdminAccountDetailsDialogComponent`; its customer access-recovery actions are UI previews only. Real temporary credentials, signed one-time reset links, email delivery, and password updates must be implemented by the backend and must never be simulated as completed server actions.
 - The customer profile form saves demo details to `clickeat.customer-profile`. It does not update an authenticated account.
+- Customer `Ver todos` from nearby stores opens `RestaurantDiscoveryComponent`, which reuses shared restaurant cards and exposes search, category filtering, rating/delivery sorting, and persisted favorites. Restaurant categories live with the catalog seed data; keep these filters synchronized when adding stores.
 - Real multi-user live updates require a backend event transport, such as NestJS WebSockets (Socket.IO or `ws`) or SSE, with authenticated room/topic subscriptions and persisted order/catalog state. Keep frontend demo persistence behind services so those services can later be replaced by API and realtime adapters. Do not claim BroadcastChannel/localStorage synchronization is server realtime.
 - Angular 22 requires Node.js 22.22.3 or newer (or 24.15.0 / 26+). The default shell may still select Node 20; use the installed supported Node version when building.
 
