@@ -317,3 +317,26 @@
 .app-shell.dark-theme app-delivery-fees .fee-config-card,.app-shell.dark-theme app-delivery-fees .model-card,.app-shell.dark-theme app-delivery-fees .platform-selected,.app-shell.dark-theme app-reports-panel .report-filters,.app-shell.dark-theme app-reports-panel .report-results { background:#171a1f;border-color:#2b3038;color:#e7e9ed; }
 .app-shell.dark-theme app-delivery-fees .config-summary>div,.app-shell.dark-theme app-delivery-fees .config-summary>label,.app-shell.dark-theme app-delivery-fees .fee-note,.app-shell.dark-theme app-delivery-fees .rule-icon,.app-shell.dark-theme app-delivery-fees .new-rule { background:#20242a;border-color:#323740; }
 .app-shell.dark-theme .footer { border-color:#292d34;color:#878d97; }
+
+.app-shell.dark-theme .profile-identity,.app-shell.dark-theme .profile-highlights article,.app-shell.dark-theme .profile-security { background:#171a1f;border-color:#2b3038; }
+.app-shell.dark-theme .profile-identity h2,.app-shell.dark-theme .profile-highlights article b,.app-shell.dark-theme .profile-security b { color:#e7e9ed; }
+.app-shell.dark-theme .profile-identity p,.app-shell.dark-theme .profile-highlights article small,.app-shell.dark-theme .profile-security small { color:#a1a6af; }
+.app-shell.dark-theme .profile-status { background:#1d3026;color:#9ce2bd; }
+.app-shell.dark-theme .profile-section-heading h2 { color:#e7e9ed; }
+.app-shell.dark-theme .catalog-product-row,.app-shell.dark-theme .stock-editor { border-color:#2b3038;background:#171a1f; }
+.app-shell.dark-theme .catalog-product-info b,.app-shell.dark-theme .catalog-empty b { color:#e7e9ed; }
+.app-shell.dark-theme .catalog-product-info small,.app-shell.dark-theme .catalog-empty span,.app-shell.dark-theme .stock-status { color:#a1a6af; }
+.app-shell.dark-theme .catalog-product-actions .soft-btn,.app-shell.dark-theme .stock-quantity>button,.app-shell.dark-theme .dialog-close { background:#20242a;border-color:#343a43;color:#cbd2cc; }
+.app-shell.dark-theme .danger-btn { background:#342321;border-color:#543831;color:#f0b5a8; }
+.app-shell.dark-theme .product-dialog { background:#191c21;border-color:#363b44;color:#eceef1; }
+.app-shell.dark-theme .product-dialog h2,.app-shell.dark-theme .product-dialog form>label,.app-shell.dark-theme .product-form-grid label { color:#e1e6e2; }
+.app-shell.dark-theme .dialog-caption,.app-shell.dark-theme .confirm-product-delete>p { color:#a1a6af; }
+.app-shell.dark-theme .category-arrows button { background:#171a1f;border-color:#343a43;color:#c4cbc6; }
+.app-shell.dark-theme app-order-tracking .tracking-page { color:#e7e9ed; }
+.app-shell.dark-theme app-order-tracking .tracking-heading h1,.app-shell.dark-theme app-order-tracking .tracking-step b,.app-shell.dark-theme app-order-tracking .courier-card b { color:#e7e9ed; }
+.app-shell.dark-theme app-order-tracking .tracking-map { border-color:#323b35;background-color:#232b25;background-image:linear-gradient(35deg,transparent 47%,#343b36 48%,#343b36 51%,transparent 52%),linear-gradient(120deg,transparent 47%,#343b36 48%,#343b36 51%,transparent 52%); }
+.app-shell.dark-theme app-order-tracking .map-block { border-color:#38433b;background:#29332c; }
+.app-shell.dark-theme app-order-tracking .tracking-steps,.app-shell.dark-theme app-order-tracking .courier-card { background:#171a1f;border-color:#2b3038; }
+.app-shell.dark-theme app-order-tracking .step-icon { background:#171a1f;border-color:#343a43;color:#a1a6af; }
+.app-shell.dark-theme app-order-tracking .step-icon.done { background:#1c3329;color:#9ce2bd; }
+.app-shell.dark-theme app-order-tracking .tracking-disclaimer,.app-shell.dark-theme app-order-tracking .tracking-step small,.app-shell.dark-theme app-order-tracking .courier-card small { color:#a1a6af; }

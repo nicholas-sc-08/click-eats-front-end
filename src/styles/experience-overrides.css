@@ -1,0 +1,63 @@
+/* Login is a focused full-page flow, separate from the shopping workspace. */
+.app-shell.auth-mode{display:block;max-width:none;min-height:100vh;background:var(--paper)}
+.app-shell.auth-mode .sidebar,.app-shell.auth-mode app-workspace-sidebar,.app-shell.auth-mode .topbar,.app-shell.auth-mode .cart-panel,.app-shell.auth-mode .footer{display:none!important}
+.app-shell.auth-mode .main-area{display:grid;min-height:100vh;align-items:center;grid-template-columns:minmax(0,1fr)}
+.app-shell.auth-mode .auth-page{width:min(100% - 32px,460px);max-width:460px;min-height:auto;margin:28px auto;padding:36px;border:1px solid var(--line);border-radius:22px;background:#fff;box-shadow:0 20px 65px #26372b12}
+.app-shell.dark-theme.auth-mode{background:#0c0e11}
+.app-shell.dark-theme.auth-mode .auth-page{border-color:#2b3038;background:#171a1f;box-shadow:0 22px 70px #0005}
+.app-shell.dark-theme.auth-mode .auth-page h1{color:#f0f1f3}
+.app-shell.dark-theme.auth-mode .auth-page .subheading,.app-shell.dark-theme.auth-mode .auth-label{color:#a1a6af}
+.app-shell.dark-theme.auth-mode .google-login{border-color:#343a43;background:#20242a;color:#e7e9ed}
+.app-shell.dark-theme.auth-mode .auth-divider{color:#8e9590}
+.google-mark{display:block;width:18px;height:18px;flex:none}
+.google-login{display:flex;align-items:center;justify-content:center;gap:9px;height:46px;border-radius:10px;font-size:11px}
+.google-login b{display:inline-grid;width:20px;height:20px;place-items:center;margin:0;font-size:0}
+.auth-page .google-login{margin-top:18px}
+
+/* Compact cart access remains available when the desktop cart column collapses. */
+.mobile-cart-toggle,.mobile-cart-overlay{display:none}
+@media(max-width:1180px){
+  .cart-panel.mobile-cart-open{position:fixed;z-index:31;inset:auto 0 0;display:flex;width:100%;height:min(84dvh,720px);padding:18px 18px max(18px,env(safe-area-inset-bottom));overflow-y:auto;border:1px solid #dce5dc;border-bottom:0;border-radius:20px 20px 0 0;background:#fff;box-shadow:0 -18px 60px #14231c2b;animation:mobile-cart-in .24s cubic-bezier(.2,.8,.2,1) both}
+  .cart-panel.mobile-cart-open .cart-heading{position:sticky;top:-18px;z-index:1;padding:5px 0 14px;background:#fff}
+  .cart-panel.mobile-cart-open .cart-more{display:grid;width:34px;height:34px;place-items:center;border:1px solid #e5ebe5;border-radius:10px;background:#f7f9f6;font-size:23px}
+  .mobile-cart-overlay{position:fixed;z-index:30;inset:0;display:block;background:#11191577;backdrop-filter:blur(3px);animation:cart-overlay-in .2s ease both}
+  .mobile-cart-toggle{position:fixed;z-index:29;right:16px;bottom:max(16px,env(safe-area-inset-bottom));left:16px;display:flex;align-items:center;gap:10px;width:min(100% - 32px,460px);min-height:54px;margin:0 auto;padding:0 15px;border:1px solid #2f876b;border-radius:14px;background:#176c5b;color:#fff;box-shadow:0 9px 26px #145b4a45;text-align:left;cursor:pointer;transition:transform .18s,box-shadow .18s}
+  .mobile-cart-toggle:hover{transform:translateY(-2px);box-shadow:0 13px 30px #145b4a55}
+  .mobile-cart-icon{display:grid;width:32px;height:32px;flex:none;place-items:center;border-radius:10px;background:#ffffff20}
+  .mobile-cart-icon svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .mobile-cart-toggle>span:nth-child(2){display:flex;align-items:center;gap:7px;font-size:11px;font-weight:750}
+  .mobile-cart-toggle>span:nth-child(2) b{display:grid;min-width:19px;height:19px;place-items:center;border-radius:99px;background:#ffffff26;font-size:9px}
+  .mobile-cart-toggle>strong{margin-left:auto;font-size:12px}
+  .mobile-cart-toggle>i{font-size:18px;font-style:normal}
+}
+@keyframes mobile-cart-in{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cart-overlay-in{from{opacity:0}to{opacity:1}}
+@media(max-width:1180px){.app-shell.dark-theme .cart-panel.mobile-cart-open,.app-shell.dark-theme .cart-panel.mobile-cart-open .cart-heading{border-color:#2b3038;background:#111317}.app-shell.dark-theme .cart-panel.mobile-cart-open .cart-more{border-color:#343a43;background:#20242a;color:#e7e9ed}.app-shell.dark-theme .mobile-cart-toggle{border-color:#34866c;background:#17624f}}
+
+/* Refined store product modal, stock controls, and admin account surfaces in charcoal mode. */
+.app-shell.dark-theme .stock-editor{border-color:#343a43;background:#1a1e23}
+.app-shell.dark-theme .stock-copy b{color:#e1e6e2}
+.app-shell.dark-theme .stock-copy small,.app-shell.dark-theme .stock-status{color:#a1a6af}
+.app-shell.dark-theme .stock-quantity input,.app-shell.dark-theme .stock-quantity>button{border-color:#343a43;background:#111317;color:#e7e9ed}
+.app-shell.dark-theme .account-management{--border:#30353d;--surface:#171a1f;--surface-muted:#20242a;--text:#e7e9ed;--muted:#a1a6af;border-color:#2b3038;background:#171a1f;color:#e7e9ed;box-shadow:0 12px 28px #0003}
+.app-shell.dark-theme .account-management .management-summary article,.app-shell.dark-theme .account-management .table-head{border-color:#30353d;background:#20242a}
+.app-shell.dark-theme .account-management .management-summary b,.app-shell.dark-theme .account-management .account-name b{color:#e7e9ed}
+.app-shell.dark-theme .account-management .management-summary small,.app-shell.dark-theme .account-management .contact-cell,.app-shell.dark-theme .account-management .account-row{color:#b3bbc2}
+.app-shell.dark-theme .account-management .account-row{border-color:#2b3038}
+.app-shell.dark-theme .account-management .account-row:hover{background:#1d2228}
+.app-shell.dark-theme .account-management .entity-switch{border-color:#30353d;background:#111317}
+.app-shell.dark-theme .account-management .entity-switch button{color:#b5bdc4}
+.app-shell.dark-theme .account-management .entity-switch button.active{background:#23282e;color:#9ce2bd}
+.app-shell.dark-theme .account-management .account-search,.app-shell.dark-theme .account-management .row-actions button,.app-shell.dark-theme .account-management .cancel-action{border-color:#343a43;background:#111317;color:#e0e3e8}
+.app-shell.dark-theme .account-management .account-search input{color:#e7e9ed}
+.app-shell.dark-theme .account-management .export-note{background:#202a25;color:#9ce2bd}
+.app-shell.dark-theme .account-management .dialog-icon{background:#202a25;color:#9ce2bd}
+.app-shell.dark-theme .account-management .danger-icon{background:#342321;color:#f0b5a8}
+.app-shell.dark-theme .product-dialog-backdrop~.product-dialog{color:#e7e9ed}
+.app-shell.dark-theme .product-dialog{border-color:#363b44;background:#191c21;color:#eceef1}
+.app-shell.dark-theme .product-dialog h2,.app-shell.dark-theme .product-dialog form>label,.app-shell.dark-theme .product-form-grid label{color:#e1e6e2}
+.app-shell.dark-theme .product-dialog input,.app-shell.dark-theme .product-dialog textarea{border-color:#343a43;background:#111317;color:#e7e9ed}
+.app-shell.dark-theme .product-dialog .soft-btn{border-color:#343a43;background:#20242a;color:#d1d6d2}
+.app-shell.dark-theme .order-saved-check{background:#1c3329;color:#9ce2bd;box-shadow:inset 0 0 0 1px #315543}
+.app-shell.dark-theme .category-arrows button{border-color:#343a43;background:#171a1f;color:#c4cbc6}
+@media(prefers-reduced-motion:reduce){.cart-panel.mobile-cart-open,.mobile-cart-overlay{animation-duration:.01ms!important}}
