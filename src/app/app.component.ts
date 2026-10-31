@@ -20,6 +20,7 @@ import { WorkspaceRole, WorkspaceSection } from './models/workspace.models';
     <a class="brand" href="#" (click)="$event.preventDefault(); view.set('home')"><span class="brand-mark">c</span><span>click<span class="brand-eat">eat</span><small>comida boa, sem complicação</small></span></a>
     <div class="side-label">MENU</div>
     <button class="side-link" [class.active]="view()==='home'" (click)="view.set('home')"><span>⌂</span> Início</button>
+    <button class="side-link" [class.active]="view()==='favorites'" (click)="view.set('favorites')"><span>♡</span> Favoritos</button>
     <button class="side-link" [class.active]="view()==='orders'" (click)="view.set('orders')"><span>▤</span> Meus pedidos</button>
     <button class="side-link" [class.active]="view()==='coupons'" (click)="view.set('coupons')"><span>♧</span> Cupons <i class="side-new">2 novos</i></button>
     <button class="side-link" [class.active]="view()==='profile'" (click)="view.set('profile')"><span>◉</span> Meu perfil</button>
@@ -43,7 +44,7 @@ import { WorkspaceRole, WorkspaceSection } from './models/workspace.models';
       <app-order-tracking (back)="view.set('orders')" (contact)="notices.info('O contato com o entregador será conectado ao backend.')" />
     } @else if (view()==='checkout') {
       <app-checkout [items]="cart()" [appliedCouponCode]="appliedCouponCode()" (back)="view.set('home')" (confirmed)="completeOrder()" />
-    } @else if (view()==='home' || view()==='storefront') {
+    } @else if (view()==='home' || view()==='storefront' || view()==='favorites') {
       <app-customer-catalog [view]="view()" (navigate)="view.set($event)" (addToCart)="addMany($event)" (couponRequest)="view.set('coupons')" />
     } @else {
       <app-customer-account [view]="view()" [appliedCouponCode]="appliedCouponCode()" (couponApply)="applyCoupon($event)" (navigate)="view.set($event)" />
@@ -58,7 +59,7 @@ import { WorkspaceRole, WorkspaceSection } from './models/workspace.models';
 export class AppComponent {
  readonly notices = inject(NotificationService);
  readonly isDarkTheme = signal(this.readSavedTheme());
- readonly view = signal<'home'|'storefront'|'coupons'|'orders'|'auth'|'reviews'|'profile'|'checkout'|'tracking'>('home');
+ readonly view = signal<'home'|'storefront'|'favorites'|'coupons'|'orders'|'auth'|'reviews'|'profile'|'checkout'|'tracking'>('home');
  readonly role = signal<'customer'|'admin'|'store'|'courier'>('customer');
  readonly workspaceRole = computed<WorkspaceRole>(() => {
    const currentRole = this.role();
