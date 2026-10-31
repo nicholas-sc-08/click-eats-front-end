@@ -1,22 +1,30 @@
 import { Component, inject, Input, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { ADMIN_DASHBOARD_ACCOUNTS } from '../../core/analytics/admin-dashboard.data';
 import { ReportExportService } from '../../core/reports/report-export.service';
+import { AdminDashboardAccount, AdminDashboardAccountStatus, AdminDashboardEntity } from '../../models/admin-dashboard-account.model';
+import { AdminAccountDetailsDialogComponent } from './admin-account-details-dialog.component';
 
 type AnalyticsScope = 'admin' | 'store';
-type AdminEntity = 'Usuários' | 'Restaurantes' | 'Entregadores';
 
 @Component({
   selector: 'app-analytics-panel',
   standalone: true,
-  imports: [CommonModule],
+  imports: [AdminAccountDetailsDialogComponent],
   template: `
     @if(scope === 'admin') {
       <section class="analytics-shell" aria-label="Indicadores da plataforma">
         <div class="analytics-intro"><div><div class="eyebrow">INTELIGÊNCIA DA OPERAÇÃO</div><h2>O crescimento, em <span>perspectiva.</span></h2><p>Indicadores da plataforma para decisões mais seguras.</p></div><label class="period-control">Período<select [value]="period()" (change)="period.set($any($event.target).value)"><option>Últimos 30 dias</option><option>Últimos 7 dias</option><option>Este ano</option></select></label></div>
         <div class="metric-grid"><article class="metric-card"><div class="metric-top"><span class="metric-icon mint">♙</span><span class="trend">↗ 14,8%</span></div><small>Usuários ativos</small><b>24.860</b><div class="mini-bars">@for(bar of [35,48,42,63,54,71,60,86,69,96];track $index){<i [style.height.%]="bar"></i>}</div><span class="metric-foot">+ 3.214 neste mês</span></article><article class="metric-card"><div class="metric-top"><span class="metric-icon peach">⌂</span><span class="trend">↗ 8,2%</span></div><small>Restaurantes ativos</small><b>1.248</b><div class="mini-bars peach-bars">@for(bar of [38,45,51,44,63,58,76,69,84,100];track $index){<i [style.height.%]="bar"></i>}</div><span class="metric-foot">86 aguardando ativação</span></article><article class="metric-card"><div class="metric-top"><span class="metric-icon lilac">↗</span><span class="trend">↗ 11,3%</span></div><small>Entregadores online</small><b>862</b><div class="mini-bars lilac-bars">@for(bar of [32,48,40,56,51,68,63,78,73,91];track $index){<i [style.height.%]="bar"></i>}</div><span class="metric-foot">1.430 cadastrados</span></article></div>
         <div class="chart-grid"><article class="chart-card"><div class="chart-heading"><div><small>EVOLUÇÃO DA BASE</small><h3>{{selectedEntity()}} ao longo do tempo</h3></div><div class="entity-switch">@for(entity of entities;track entity){<button type="button" [class.active]="selectedEntity()===entity" (click)="selectedEntity.set(entity)">{{entity}}</button>}</div></div><div class="line-chart"><div class="chart-guides"><span>30 mil</span><span>20 mil</span><span>10 mil</span><span>0</span></div><svg viewBox="0 0 680 190" preserveAspectRatio="none" role="img" [attr.aria-label]="'Gráfico de evolução de ' + selectedEntity()"><defs><linearGradient id="growth-fill" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#27846b" stop-opacity=".22"/><stop offset="1" stop-color="#27846b" stop-opacity="0"/></linearGradient></defs><path [attr.d]="areaPath()" fill="url(#growth-fill)"/><path [attr.d]="linePath()" fill="none" stroke="#27846b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="animated-line"/>@for(point of chartPoints('base');track $index){<g class="chart-point" tabindex="0" role="img" [attr.aria-label]="point.label + ': ' + point.title + ' ' + point.value + ', ' + point.detail"><circle [attr.cx]="point.x" [attr.cy]="point.y" r="7"/><g class="chart-point-popover"><rect [attr.x]="point.x<500?point.x+12:point.x-151" [attr.y]="Math.max(3,point.y-57)" width="139" height="48" rx="7"/><text [attr.x]="point.x<500?point.x+21:point.x-142" [attr.y]="Math.max(19,point.y-39)">{{point.label}} · {{point.title}}</text><text class="point-value" [attr.x]="point.x<500?point.x+21:point.x-142" [attr.y]="Math.max(34,point.y-21)">{{point.value}} · {{point.detail}}</text></g></g>}</svg></div><div class="chart-labels"><span>01 out</span><span>06 out</span><span>12 out</span><span>18 out</span><span>24 out</span><span>30 out</span></div></article><article class="chart-card composition-card"><div class="chart-heading"><div><small>SAÚDE DA OPERAÇÃO</small><h3>Contas por situação</h3></div><span class="live-badge"><i></i> Atualizado</span></div><div class="composition"><div class="donut"><div><b>27 mil</b><small>contas</small></div></div><div class="composition-legend"><span><i class="green-dot"></i>Ativas <b>82%</b></span><span><i class="amber-dot"></i>Em análise <b>11%</b></span><span><i class="gray-dot"></i>Pausadas <b>7%</b></span></div></div><div class="composition-footer"><span>Taxa de aprovação</span><b>94,2% <em>↗ 2,1%</em></b></div></article></div>
-        <article class="management-card"><div class="chart-heading management-heading"><div><small>GESTÃO DE CONTAS</small><h3>Acompanhe sua rede</h3><p>Consulte o estado das contas cadastradas na plataforma.</p></div><button type="button" class="export-note" (click)="exportAccounts()">▤ Exportar lista</button></div><div class="entity-switch management-tabs">@for(entity of entities;track entity){<button type="button" [class.active]="selectedEntity()===entity" (click)="selectedEntity.set(entity)">{{entity}} <span>{{entityCount(entity)}}</span></button>}</div><div class="account-table"><div class="table-head"><span>NOME</span><span>CADASTRO</span><span>ATIVIDADE</span><span>STATUS</span><span>AÇÃO</span></div>@for(account of accountsForSelected();track account.name){<div class="account-row"><div class="account-name"><span>{{account.initial}}</span><b>{{account.name}}<small>{{account.detail}}</small></b></div><span>{{account.joined}}</span><span>{{account.activity}}</span><i class="account-status" [class.pending]="accountStatus(account)==='Em análise'">{{accountStatus(account)}}</i><button type="button" class="view-account" (click)="selectedAccount.set(account.name)">Ver conta</button></div>}</div><p class="demo-caption">Demonstração visual · a gestão real de contas será conectada ao backend.</p></article>
-        @if(selectedAccountDetails();as account){<div class="account-overlay" (click)="selectedAccount.set('')"><section class="account-dialog" role="dialog" aria-modal="true" aria-label="Detalhes da conta" (click)="$event.stopPropagation()"><button type="button" class="dialog-close" aria-label="Fechar" (click)="selectedAccount.set('')">×</button><span class="dialog-avatar">{{account.initial}}</span><div class="eyebrow">DETALHES DA CONTA</div><h2>{{account.name}}</h2><p>{{account.detail}}</p><div class="account-detail-grid"><span>Cadastro<b>{{account.joined}}</b></span><span>Atividade recente<b>{{account.activity}}</b></span><span>Status atual<b>{{accountStatus(account)}}</b></span></div><button type="button" class="account-action" (click)="toggleAccountStatus(account)">{{accountStatus(account)==='Ativa'?'Sinalizar para análise':'Reativar conta'}}</button><small class="demo-caption">Ação apenas demonstrativa; nenhuma conta real será alterada.</small></section></div>}
+        <article class="management-card"><div class="chart-heading management-heading"><div><small>GESTÃO DE CONTAS</small><h3>Acompanhe sua rede</h3><p>Consulte o estado das contas cadastradas na plataforma.</p></div><button type="button" class="export-note" (click)="exportAccounts()">▤ Exportar lista</button></div><div class="entity-switch management-tabs">@for(entity of entities;track entity){<button type="button" [class.active]="selectedEntity()===entity" (click)="selectedEntity.set(entity)">{{entity}} <span>{{entityCount(entity)}}</span></button>}</div><div class="account-table"><div class="table-head"><span>NOME</span><span>CADASTRO</span><span>ATIVIDADE</span><span>STATUS</span><span>AÇÃO</span></div>@for(account of accountsForSelected();track account.id){<div class="account-row"><div class="account-name"><span>{{account.initial}}</span><b>{{account.name}}<small>{{account.detail}}</small></b></div><span>{{account.joined}}</span><span>{{account.activity}}</span><i class="account-status" [class.pending]="accountStatus(account)==='Em análise'">{{accountStatus(account)}}</i><button type="button" class="view-account" (click)="selectedAccount.set(account)">Ver conta</button></div>}</div><p class="demo-caption">Demonstração visual · a gestão real de contas será conectada ao backend.</p></article>
+        @if (selectedAccount(); as account) {
+          <app-admin-account-details-dialog
+            [account]="account"
+            [status]="accountStatus(account)"
+            (closed)="selectedAccount.set(null)"
+            (statusToggle)="toggleAccountStatus(account)"
+          />
+        }
       </section>
     } @else {
       <section class="analytics-shell store-analytics" aria-label="Indicadores do restaurante">
@@ -34,21 +42,18 @@ export class AnalyticsPanelComponent {
   @Input() scope: AnalyticsScope = 'admin';
   readonly period = signal('Últimos 30 dias');
   readonly Math = Math;
-  readonly entities: AdminEntity[] = ['Usuários', 'Restaurantes', 'Entregadores'];
-  readonly selectedEntity = signal<AdminEntity>('Usuários');
-  readonly selectedAccount = signal('');
-  readonly accountOverrides = signal<Record<string, string>>({});
+  readonly entities: AdminDashboardEntity[] = ['Usuários', 'Restaurantes', 'Entregadores'];
+  readonly selectedEntity = signal<AdminDashboardEntity>('Usuários');
+  readonly selectedAccount = signal<AdminDashboardAccount | null>(null);
+  readonly accountOverrides = signal<Record<string, AdminDashboardAccountStatus>>({});
   readonly products = [{ name: 'Brasa Clássico', icon: '🍔', orders: 164, share: 84 }, { name: 'Fritas da casa', icon: '🍟', orders: 128, share: 66 }, { name: 'Duplo Cheddar', icon: '🍔', orders: 96, share: 49 }];
-  private readonly accounts: Record<AdminEntity, { initial: string; name: string; detail: string; joined: string; activity: string; status: string }[]> = {
-    Usuários: [{ initial: 'M', name: 'Marina Costa', detail: 'marina.costa@email.com', joined: '12 out, 2026', activity: '8 pedidos', status: 'Ativa' }, { initial: 'L', name: 'Lucas Almeida', detail: 'lucas.almeida@email.com', joined: '10 out, 2026', activity: '5 pedidos', status: 'Ativa' }, { initial: 'C', name: 'Camila Rocha', detail: 'camila.rocha@email.com', joined: '08 out, 2026', activity: '1 pedido', status: 'Em análise' }],
-    Restaurantes: [{ initial: 'B', name: 'Brasa & Ponto', detail: 'Hambúrguer · Pinheiros', joined: '03 set, 2026', activity: '42 pedidos hoje', status: 'Ativa' }, { initial: 'F', name: 'Forno da Vila', detail: 'Pizza · Vila Madalena', joined: '14 set, 2026', activity: '31 pedidos hoje', status: 'Ativa' }, { initial: 'N', name: 'Casa Nori', detail: 'Japonesa · Pinheiros', joined: '20 out, 2026', activity: 'Revisão cadastral', status: 'Em análise' }],
-    Entregadores: [{ initial: 'R', name: 'Rafael Oliveira', detail: 'Entrega ClickEat · São Paulo', joined: '05 ago, 2026', activity: '8 entregas hoje', status: 'Ativa' }, { initial: 'J', name: 'João Mendes', detail: 'Entrega própria · São Paulo', joined: '22 ago, 2026', activity: '6 entregas hoje', status: 'Ativa' }, { initial: 'A', name: 'André Lima', detail: 'Entrega ClickEat · São Paulo', joined: '24 out, 2026', activity: 'Documentos pendentes', status: 'Em análise' }],
-  };
-  entityCount(entity: AdminEntity): string { return ({ Usuários: '24,8k', Restaurantes: '1,2k', Entregadores: '862' })[entity]; }
-  accountsForSelected() { return this.accounts[this.selectedEntity()]; }
-  selectedAccountDetails() { return this.accountsForSelected().find(account => account.name === this.selectedAccount()); }
-  accountStatus(account: { name: string; status: string }): string { return this.accountOverrides()[account.name] ?? account.status; }
-  toggleAccountStatus(account: { name: string; status: string }): void { const current = this.accountStatus(account); this.accountOverrides.update(values => ({ ...values, [account.name]: current === 'Ativa' ? 'Em análise' : 'Ativa' })); }
+  entityCount(entity: AdminDashboardEntity): string { return ({ Usuários: '24,8k', Restaurantes: '1,2k', Entregadores: '862' })[entity]; }
+  accountsForSelected(): AdminDashboardAccount[] { return ADMIN_DASHBOARD_ACCOUNTS[this.selectedEntity()]; }
+  accountStatus(account: AdminDashboardAccount): AdminDashboardAccountStatus { return this.accountOverrides()[account.id] ?? account.status; }
+  toggleAccountStatus(account: AdminDashboardAccount): void {
+    const nextStatus = this.accountStatus(account) === 'Ativa' ? 'Em análise' : 'Ativa';
+    this.accountOverrides.update(values => ({ ...values, [account.id]: nextStatus }));
+  }
   exportAccounts(): void { this.exporter.downloadCsv(`clickeat-${this.selectedEntity().toLocaleLowerCase('pt-BR')}.csv`, ['Nome', 'Detalhe', 'Cadastro', 'Atividade', 'Status'], this.accountsForSelected().map(account => [account.name, account.detail, account.joined, account.activity, this.accountStatus(account)])); }
   private get points(): string {
     if (this.period() === 'Últimos 7 dias') return '0,164 80,145 163,151 247,109 330,125 413,80 496,91 580,48 680,25';

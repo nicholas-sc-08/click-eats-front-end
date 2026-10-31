@@ -1,0 +1,734 @@
+:host {
+  position: fixed;
+  z-index: 140;
+  inset: 0;
+  display: block;
+}
+
+.account-details-overlay {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 24px;
+  background: rgb(22 31 26 / 58%);
+  backdrop-filter: blur(6px);
+  animation: account-overlay-enter 200ms ease both;
+}
+
+.account-details-overlay.closing {
+  animation: account-overlay-exit 220ms ease both;
+}
+
+.account-details-dialog {
+  position: relative;
+  width: min(680px, 100%);
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
+  padding: 28px;
+  border: 1px solid rgb(255 255 255 / 78%);
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 30px 100px rgb(12 22 16 / 30%), 0 5px 16px rgb(12 22 16 / 10%);
+  animation: account-dialog-enter 280ms cubic-bezier(.2, .8, .2, 1) both;
+}
+
+.account-details-dialog.closing {
+  animation: account-dialog-exit 220ms cubic-bezier(.4, 0, 1, 1) both;
+}
+
+.details-close {
+  position: absolute;
+  z-index: 1;
+  top: 18px;
+  right: 18px;
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 1px solid #e9eee9;
+  border-radius: 11px;
+  background: #fff;
+  color: #77837a;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 150ms ease, background 150ms ease, border-color 150ms ease;
+}
+
+.details-close:hover {
+  border-color: #dbe6dd;
+  background: #f4f7f4;
+  color: #354139;
+}
+
+.account-profile-header {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 15px;
+  padding: 2px 44px 23px 0;
+  border-bottom: 1px solid #edf0ed;
+}
+
+.account-profile-avatar {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  border: 1px solid #d8e9dc;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #edf7ef, #dcefe1);
+  color: #26765a;
+  font-size: 21px;
+  font-weight: 800;
+  box-shadow: inset 0 1px 0 #fff;
+}
+
+.account-profile-copy {
+  min-width: 0;
+}
+
+.account-profile-eyebrow {
+  color: #8c988e;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.1px;
+}
+
+.account-profile-copy h2,
+.password-setup-content h2,
+.password-complete-content h2 {
+  margin: 5px 0 3px;
+  color: #303a33;
+  font-size: 22px;
+  letter-spacing: -.55px;
+  line-height: 1.2;
+}
+
+.account-profile-copy p {
+  overflow: hidden;
+  margin: 0;
+  color: #7d887f;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-profile-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 10px;
+  border: 1px solid #dceee1;
+  border-radius: 99px;
+  background: #eff8f1;
+  color: #287453;
+  font-size: 10px;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.account-profile-status i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.account-profile-status.pending {
+  border-color: #f0e2c6;
+  background: #fff8e9;
+  color: #a16c1c;
+}
+
+.account-profile-status.paused {
+  border-color: #efd9d6;
+  background: #fff2f0;
+  color: #a54d45;
+}
+
+.account-information,
+.account-access-section {
+  padding: 21px 0;
+  border-bottom: 1px solid #edf0ed;
+}
+
+.details-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-bottom: 15px;
+}
+
+.details-section-icon {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  place-items: center;
+  border-radius: 11px;
+  background: #f1f5f1;
+  color: #587264;
+  font-size: 20px;
+}
+
+.details-section-icon.access-icon {
+  background: #eef4fb;
+  color: #4a709b;
+}
+
+.details-section-heading h3 {
+  margin: 0 0 3px;
+  color: #3a463e;
+  font-size: 12px;
+  letter-spacing: -.1px;
+}
+
+.details-section-heading p {
+  margin: 0;
+  color: #89948b;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.account-information-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  margin: 0;
+  border: 1px solid #edf0ed;
+  border-radius: 13px;
+  background: #edf0ed;
+}
+
+.account-information-grid > div {
+  min-width: 0;
+  min-height: 66px;
+  padding: 12px 14px;
+  background: #fff;
+}
+
+.account-information-grid dt {
+  margin-bottom: 6px;
+  color: #879188;
+  font-size: 9px;
+  font-weight: 650;
+}
+
+.account-information-grid dd {
+  overflow-wrap: anywhere;
+  margin: 0;
+  color: #3c4940;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.account-access-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.access-action {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) 14px;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  min-height: 72px;
+  padding: 12px;
+  border: 1px solid #e7ece7;
+  border-radius: 13px;
+  background: #fff;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+
+.access-action:hover {
+  transform: translateY(-2px);
+  border-color: #cbded0;
+  background: #fbfdfb;
+  box-shadow: 0 7px 18px rgb(30 58 39 / 7%);
+}
+
+.access-action-icon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 10px;
+  background: #edf5ef;
+  color: #33775b;
+}
+
+.invite-action .access-action-icon {
+  background: #eef4fb;
+  color: #4d7196;
+}
+
+.access-action-icon svg {
+  width: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.access-action > span:nth-child(2) {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.access-action b {
+  color: #3b483f;
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.access-action small {
+  color: #879188;
+  font-size: 9px;
+  line-height: 1.4;
+}
+
+.access-action-arrow {
+  color: #8b988e;
+  font-size: 15px;
+  transition: transform 160ms ease;
+}
+
+.access-action:hover .access-action-arrow {
+  transform: translateX(2px);
+}
+
+.temporary-password-result,
+.invite-preview {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 11px;
+  padding: 12px;
+  border: 1px solid #dcebe0;
+  border-radius: 12px;
+  background: #f5faf6;
+  animation: inline-result-enter 180ms ease both;
+}
+
+.temporary-password-copy {
+  display: grid;
+  flex: 1;
+  gap: 5px;
+  min-width: 0;
+}
+
+.temporary-password-copy > span {
+  color: #66756a;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.temporary-password-copy code {
+  overflow-wrap: anywhere;
+  color: #235f48;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: .6px;
+}
+
+.copy-password-button,
+.invite-preview button {
+  flex: none;
+  padding: 8px 10px;
+  border: 1px solid #d4e4d8;
+  border-radius: 8px;
+  background: #fff;
+  color: #2f7557;
+  font-size: 9px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.temporary-password-result > p {
+  position: absolute;
+  right: 12px;
+  bottom: 2px;
+  left: 12px;
+  margin: 0;
+  color: #8a968d;
+  font-size: 8px;
+}
+
+.temporary-password-result {
+  padding-bottom: 22px;
+}
+
+.invite-preview {
+  flex-wrap: wrap;
+  background: #f5f8fc;
+  border-color: #e0e8f2;
+}
+
+.invite-preview-check {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  place-items: center;
+  border-radius: 50%;
+  background: #e6f4ea;
+  color: #29805b;
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.invite-preview > div {
+  display: grid;
+  flex: 1;
+  gap: 4px;
+  min-width: 120px;
+}
+
+.invite-preview b {
+  color: #3b483f;
+  font-size: 10px;
+}
+
+.invite-preview small {
+  color: #7e8b82;
+  font-size: 9px;
+  line-height: 1.4;
+}
+
+.account-details-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 17px;
+}
+
+.account-status-action {
+  min-height: 37px;
+  padding: 0 12px;
+  border: 1px solid #dce8dd;
+  border-radius: 9px;
+  background: #edf5ef;
+  color: #34795d;
+  font-size: 10px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: background-color 150ms ease, transform 150ms ease;
+}
+
+.account-status-action:hover {
+  transform: translateY(-1px);
+  background: #e1eee4;
+}
+
+.account-details-footer p {
+  max-width: 240px;
+  margin: 0;
+  color: #99a29b;
+  font-size: 9px;
+  line-height: 1.45;
+  text-align: right;
+}
+
+.password-setup-content,
+.password-complete-content {
+  width: min(420px, 100%);
+  margin: 0 auto;
+  padding: 8px 6px 4px;
+  animation: details-content-enter 220ms ease both;
+}
+
+.dialog-back-link {
+  margin: 0 0 28px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #468166;
+  font-size: 10px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.password-setup-icon,
+.password-complete-icon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  margin-bottom: 18px;
+  border-radius: 15px;
+  background: #eaf4ee;
+  color: #197768;
+}
+
+.password-setup-icon svg,
+.password-complete-icon svg {
+  width: 23px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.password-setup-content h2,
+.password-complete-content h2 {
+  margin-top: 7px;
+}
+
+.password-setup-description,
+.password-complete-content > p {
+  margin: 8px 0 22px;
+  color: #7d887f;
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.password-setup-form {
+  display: grid;
+  gap: 14px;
+}
+
+.password-setup-form label {
+  display: grid;
+  gap: 7px;
+  color: #4e5c52;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.password-setup-form input {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid #dfe7e0;
+  border-radius: 10px;
+  outline: none;
+  background: #fff;
+  color: #344139;
+  font: inherit;
+  font-size: 11px;
+}
+
+.password-setup-form input:focus {
+  border-color: #5c9a7c;
+  box-shadow: 0 0 0 3px rgb(61 139 101 / 14%);
+}
+
+.password-form-error {
+  margin: -5px 0 0;
+  color: #a94740;
+  font-size: 10px;
+}
+
+.password-submit {
+  min-height: 42px;
+  border: 0;
+  border-radius: 10px;
+  background: #197768;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.password-submit:hover {
+  transform: translateY(-1px);
+  background: #146356;
+}
+
+.password-demo-note {
+  color: #929b94;
+  font-size: 9px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.password-complete-content {
+  padding: 40px 10px 26px;
+  text-align: center;
+}
+
+.password-complete-icon {
+  margin-right: auto;
+  margin-left: auto;
+  background: #e8f5ed;
+  color: #27805d;
+}
+
+.password-complete-icon svg {
+  stroke-width: 2.2;
+}
+
+.password-complete-content .password-submit {
+  width: 100%;
+}
+
+:host-context(.dark-theme) .account-details-dialog {
+  border-color: #3a4148;
+  background: #20242a;
+}
+
+:host-context(.dark-theme) .details-close,
+:host-context(.dark-theme) .account-information-grid > div,
+:host-context(.dark-theme) .access-action,
+:host-context(.dark-theme) .copy-password-button,
+:host-context(.dark-theme) .invite-preview button,
+:host-context(.dark-theme) .password-setup-form input {
+  border-color: #3a4148;
+  background: #282d33;
+  color: #e3e8e4;
+}
+
+:host-context(.dark-theme) .account-information-grid,
+:host-context(.dark-theme) .account-information-grid > div,
+:host-context(.dark-theme) .account-information,
+:host-context(.dark-theme) .account-access-section,
+:host-context(.dark-theme) .account-profile-header {
+  border-color: #353c43;
+}
+
+:host-context(.dark-theme) .account-profile-copy h2,
+:host-context(.dark-theme) .details-section-heading h3,
+:host-context(.dark-theme) .account-information-grid dd,
+:host-context(.dark-theme) .access-action b,
+:host-context(.dark-theme) .invite-preview b,
+:host-context(.dark-theme) .password-setup-content h2,
+:host-context(.dark-theme) .password-complete-content h2 {
+  color: #e7ebe8;
+}
+
+:host-context(.dark-theme) .temporary-password-result,
+:host-context(.dark-theme) .invite-preview {
+  border-color: #35483b;
+  background: #252e29;
+}
+
+:host-context(.dark-theme) .password-setup-form label,
+:host-context(.dark-theme) .account-profile-copy p,
+:host-context(.dark-theme) .details-section-heading p,
+:host-context(.dark-theme) .account-information-grid dt,
+:host-context(.dark-theme) .access-action small,
+:host-context(.dark-theme) .temporary-password-copy > span,
+:host-context(.dark-theme) .temporary-password-result > p,
+:host-context(.dark-theme) .password-setup-description {
+  color: #a5afa7;
+}
+
+:host-context(.dark-theme) .account-information-grid {
+  background: #353c43;
+}
+
+:host-context(.dark-theme) .details-section-icon {
+  background: #2b3330;
+  color: #a2ccb0;
+}
+
+:host-context(.dark-theme) .details-section-icon.access-icon,
+:host-context(.dark-theme) .invite-action .access-action-icon {
+  background: #2a3440;
+  color: #a5c5e7;
+}
+
+:host-context(.dark-theme) .access-action-icon,
+:host-context(.dark-theme) .temporary-password-result,
+:host-context(.dark-theme) .password-setup-icon {
+  background-color: #293a30;
+  color: #a2ddb7;
+}
+
+.details-close:focus-visible,
+.access-action:focus-visible,
+.copy-password-button:focus-visible,
+.invite-preview button:focus-visible,
+.account-status-action:focus-visible,
+.dialog-back-link:focus-visible,
+.password-submit:focus-visible {
+  outline: 3px solid rgb(55 135 99 / 28%);
+  outline-offset: 2px;
+}
+
+@keyframes account-overlay-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes account-overlay-exit {
+  to { opacity: 0; }
+}
+
+@keyframes account-dialog-enter {
+  from { opacity: 0; transform: translateY(17px) scale(.975); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes account-dialog-exit {
+  to { opacity: 0; transform: translateY(9px) scale(.985); }
+}
+
+@keyframes inline-result-enter {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes details-content-enter {
+  from { opacity: 0; transform: translateX(7px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@media (max-width: 620px) {
+  .account-details-overlay { align-items: end; padding: 12px; }
+  .account-details-dialog { max-height: calc(100vh - 24px); padding: 21px; border-radius: 20px; }
+  .account-profile-header { grid-template-columns: 48px minmax(0, 1fr); gap: 12px; padding-right: 38px; }
+  .account-profile-avatar { width: 48px; height: 48px; border-radius: 15px; font-size: 18px; }
+  .account-profile-copy h2 { font-size: 19px; }
+  .account-profile-status { grid-column: 2; justify-self: start; margin-top: -5px; }
+  .account-information-grid { grid-template-columns: 1fr; }
+  .account-information-grid > div { min-height: auto; padding: 10px 12px; }
+  .account-information-grid dt { margin-bottom: 4px; }
+  .account-access-actions { grid-template-columns: 1fr; }
+  .account-details-footer { align-items: flex-start; flex-direction: column; }
+  .account-details-footer p { text-align: left; }
+}
+
+@media (max-width: 390px) {
+  .account-details-overlay { padding: 8px; }
+  .account-details-dialog { max-height: calc(100vh - 16px); padding: 18px; }
+  .account-profile-copy h2 { font-size: 17px; }
+  .invite-preview button { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .account-details-overlay,
+  .account-details-dialog,
+  .account-details-overlay.closing,
+  .account-details-dialog.closing,
+  .temporary-password-result,
+  .invite-preview,
+  .password-setup-content,
+  .password-complete-content {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .access-action,
+  .access-action-arrow,
+  .details-close,
+  .account-status-action,
+  .password-submit {
+    transition: none;
+  }
+}
