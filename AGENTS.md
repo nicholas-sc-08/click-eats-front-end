@@ -21,6 +21,7 @@ The owner wants a polished, clean, professional UI and maintainable code. Keep t
 - `src/app/features/customer/`: restaurant discovery/catalog, product detail, checkout/payment demo, profile/orders/coupons, and order tracking.
 - `src/app/features/store/`: restaurant dashboard, product promotions and stock-limit controls, editable restaurant profile with local image previews, delivery fee settings, seeded customer reviews and replies.
 - `src/app/features/admin/`: platform dashboard; `src/app/features/analytics/` includes chart panels and CRUD demo for users, restaurants and couriers, CSV export.
+- Admin coupon campaigns live in `src/app/features/admin/coupon-management.component.ts`; shared definitions, validity windows, usage caps and local persistence live in `src/app/core/coupons/coupon.service.ts`. Customer coupon listing, cart and checkout read the same catalog; usage is consumed when the demo order is confirmed.
 - `src/app/features/courier/`: courier workspace and delivery workflow demo.
 - `src/app/features/reports/` and `src/app/features/delivery/`: report filters/exports and configurable delivery-fee rules.
 - `src/app/shared/components/`: restaurant/product cards, notification feedback, and role-specific workspace sidebar.
@@ -72,6 +73,7 @@ Important current UX details:
 - Use inline SVG or the established icon pattern for new UI icons. Avoid adding emoji as the primary functional icon for new controls; existing seeded food/category emoji are part of the demo aesthetic.
 - Provide hover, pressed, focus-visible, disabled, loading/success/error, and reduced-motion states where appropriate. Respect `prefers-reduced-motion`.
 - Notifications should use the existing animated, semantic notification component/service, not browser alerts or black debug toasts.
+- Modal overlays use Angular `animate.enter` / `animate.leave` with shared motion classes in `src/styles.css`; honor reduced-motion preferences when extending them.
 - Forms need labels, keyboard access, sensible validation, and accessible modal/dialog semantics. Confirm destructive actions in a clear dialog.
 - Prefer local, reliable assets with an explicit fallback. Do not introduce broken image URLs.
 

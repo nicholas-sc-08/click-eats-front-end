@@ -357,3 +357,34 @@
 .app-shell.dark-theme app-order-tracking .step-icon { background:#171a1f;border-color:#343a43;color:#a1a6af; }
 .app-shell.dark-theme app-order-tracking .step-icon.done { background:#1c3329;color:#9ce2bd; }
 .app-shell.dark-theme app-order-tracking .tracking-disclaimer,.app-shell.dark-theme app-order-tracking .tracking-step small,.app-shell.dark-theme app-order-tracking .courier-card small { color:#a1a6af; }
+
+/* Coupon management uses component-local styles so its neutral surfaces need dark tokens here. */
+.app-shell.dark-theme .coupon-admin-summary article,
+.app-shell.dark-theme .coupon-admin-card { background:#171a1f;border-color:#2b3038;color:#e7e9ed;box-shadow:0 12px 28px #00000025; }
+.app-shell.dark-theme .coupon-admin-summary b,
+.app-shell.dark-theme .coupon-admin-heading h2,
+.app-shell.dark-theme .coupon-name-line>b,
+.app-shell.dark-theme .coupon-meta b,
+.app-shell.dark-theme .coupon-empty b { color:#e7e9ed; }
+.app-shell.dark-theme .coupon-admin-heading p,
+.app-shell.dark-theme .coupon-main p,
+.app-shell.dark-theme .coupon-admin-foot,
+.app-shell.dark-theme .coupon-empty p { color:#a1a6af; }
+.app-shell.dark-theme .coupon-admin-row,
+.app-shell.dark-theme .coupon-empty { border-color:#2b3038; }
+.app-shell.dark-theme .coupon-row-actions>button:not(.toggle-coupon),
+.app-shell.dark-theme .coupon-cancel,
+.app-shell.dark-theme .coupon-modal-close { background:#20242a;border-color:#363b44;color:#d5d9df; }
+.app-shell.dark-theme .coupon-modal { background:#191c21;border-color:#363b44;color:#eceef1; }
+.app-shell.dark-theme .coupon-modal>p,
+.app-shell.dark-theme .coupon-modal form>label,
+.app-shell.dark-theme .coupon-form-grid label,
+.app-shell.dark-theme .date-toggle-label,
+.app-shell.dark-theme .quantity-field { color:#b5bbc4; }
+.app-shell.dark-theme .coupon-modal input:not([type=checkbox]),
+.app-shell.dark-theme .coupon-modal select { background:#111317;border-color:#30353d;color:#e7e9ed; }
+.app-shell.dark-theme .usage-config { background:#20242a;border-color:#343a43; }
+.app-shell.dark-theme .usage-config>div b { color:#e7e9ed; }
+.app-shell.dark-theme .usage-config>div small,
+.app-shell.dark-theme .inline-toggle { color:#a1a6af; }
+.app-shell.dark-theme .coupon-modal-backdrop { background:#05070bd1; }

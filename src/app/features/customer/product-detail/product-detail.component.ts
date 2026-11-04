@@ -5,8 +5,8 @@ import { MenuItem } from '../../../models/catalog.models';
   selector: 'app-product-detail',
   standalone: true,
   template: `
-    <div class="dialog-backdrop" (click)="close.emit()">
-      <section class="product-dialog" role="dialog" aria-modal="true" aria-labelledby="product-title" (click)="$event.stopPropagation()">
+    <div class="dialog-backdrop" (click)="close.emit()" animate.enter="modal-backdrop-enter" animate.leave="modal-backdrop-leave">
+      <section class="product-dialog" role="dialog" aria-modal="true" aria-labelledby="product-title" (click)="$event.stopPropagation()" animate.enter="modal-dialog-enter" animate.leave="modal-dialog-leave">
         <button class="dialog-close" type="button" aria-label="Fechar detalhes" (click)="close.emit()">×</button>
         <img class="product-hero" [src]="product.image" [alt]="product.name" (error)="useFallback($event)">
         <div class="product-content">

@@ -12,6 +12,7 @@ import { calculateCoupon } from './features/customer/coupons/coupon';
 import { OrderTrackingComponent } from './features/customer/order-tracking/order-tracking.component';
 import { WorkspaceSidebarComponent } from './shared/components/workspace-sidebar/workspace-sidebar.component';
 import { WorkspaceRole, WorkspaceSection } from './models/workspace.models';
+import { CouponService } from './core/coupons/coupon.service';
 
 @Component({ selector: 'app-root', standalone: true, imports: [AdminDashboardComponent, CourierDashboardComponent, CustomerAccountComponent, CustomerCatalogComponent, NotificationToastComponent, StoreDashboardComponent, CheckoutComponent, OrderTrackingComponent, WorkspaceSidebarComponent], template: `
 <div class="app-shell" [class.dark-theme]="isDarkTheme()" [class.auth-mode]="role()==='customer' && view()==='auth'" [class.checkout-active]="role()!=='customer' || view()==='checkout' || view()==='tracking'">
@@ -60,6 +61,7 @@ import { WorkspaceRole, WorkspaceSection } from './models/workspace.models';
 ` })
 export class AppComponent {
  readonly notices = inject(NotificationService);
+ readonly couponService=inject(CouponService);
  readonly isDarkTheme = signal(this.readSavedTheme());
  readonly view = signal<'home'|'storefront'|'favorites'|'coupons'|'orders'|'auth'|'reviews'|'profile'|'checkout'|'tracking'>('home');
  readonly role = signal<'customer'|'admin'|'store'|'courier'>('customer');
@@ -78,7 +80,7 @@ export class AppComponent {
  readonly mobileCartOpen = signal(false);
  readonly subtotal = computed(() => this.cart().reduce((total, item) => total + item.price, 0));
  readonly deliveryFee = computed(() => this.cart().length ? 4.99 : 0);
- readonly couponDiscount = computed(() => calculateCoupon(this.appliedCouponCode(), this.subtotal(), this.deliveryFee()).discount);
+ readonly couponDiscount = computed(() => calculateCoupon(this.appliedCouponCode(), this.subtotal(), this.deliveryFee(),this.couponService.coupons()).discount);
  readonly total = computed(() => Math.max(0, this.subtotal() + this.deliveryFee() - this.couponDiscount()));
 
  private readSavedTheme(): boolean {
@@ -98,7 +100,7 @@ export class AppComponent {
  }
  useCartImageFallback(event: Event) { (event.target as HTMLImageElement).src = '/images/food-fallback.svg'; }
  applyCoupon(code: string) {
-   const result = calculateCoupon(code, this.subtotal(), this.deliveryFee());
+   const result = calculateCoupon(code, this.subtotal(), this.deliveryFee(),this.couponService.coupons());
    if (!result.valid || !result.code) { this.notices.warning(result.message); return; }
    this.appliedCouponCode.set(result.code);
    this.notices.success(result.message);
@@ -106,7 +108,7 @@ export class AppComponent {
  removeCoupon() { this.appliedCouponCode.set(''); this.notices.info('Cupom removido do pedido.'); }
  remove(name: string) {
    this.cart.update(items => { const index = items.findIndex(item => item.name === name); return index < 0 ? items : items.filter((_, itemIndex) => itemIndex !== index); });
-   const couponNoLongerValid = this.appliedCouponCode() && !calculateCoupon(this.appliedCouponCode(), this.subtotal(), this.deliveryFee()).valid;
+   const couponNoLongerValid = this.appliedCouponCode() && !calculateCoupon(this.appliedCouponCode(), this.subtotal(), this.deliveryFee(),this.couponService.coupons()).valid;
    if (couponNoLongerValid) {
      this.appliedCouponCode.set('');
      this.notices.warning(`${name} removido. O cupom saiu porque o pedido não atende mais às condições.`);
@@ -123,5 +125,5 @@ export class AppComponent {
  selectWorkspaceSection(section: WorkspaceSection) { this.workspaceSection.set(section); this.sidebarOpen.set(false); }
  switchToCustomer() { this.role.set('customer'); this.workspaceSection.set('overview'); this.view.set('home'); this.sidebarOpen.set(false); }
  checkout() { if (this.cart().length) { this.mobileCartOpen.set(false); this.view.set('checkout'); } }
- completeOrder() { this.cart.set([]); this.appliedCouponCode.set(''); this.view.set('orders'); this.notices.success('Pedido confirmado! Você pode acompanhar tudo em Meus pedidos.'); }
+ completeOrder() { const code=this.appliedCouponCode();if(code&&!this.couponService.consume(code)){this.appliedCouponCode.set('');this.notices.warning('O cupom não está mais disponível. Confira o total antes de confirmar novamente.');return;}this.cart.set([]); this.appliedCouponCode.set(''); this.view.set('orders'); this.notices.success('Pedido confirmado! Você pode acompanhar tudo em Meus pedidos.'); }
 }

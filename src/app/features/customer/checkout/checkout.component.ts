@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, signal } from '@angular/core';
 import { MenuItem } from '../../../models/catalog.models';
 import { calculateCoupon } from '../coupons/coupon';
+import { CouponService } from '../../../core/coupons/coupon.service';
 
 @Component({
   selector: 'app-checkout',
@@ -23,6 +24,7 @@ import { calculateCoupon } from '../coupons/coupon';
 styleUrl: './checkout.component.css',
 })
 export class CheckoutComponent {
+  private readonly couponService=inject(CouponService);
   @Input({ required: true }) items: MenuItem[] = [];
   @Input() appliedCouponCode = '';
   @Output() back = new EventEmitter<void>();
@@ -38,7 +40,7 @@ export class CheckoutComponent {
   readonly pixCode = signal(this.generatePixCode());
   subtotal(): number { return this.items.reduce((sum, item) => sum + item.price, 0); }
   deliveryFee(): number { return this.items.length ? 4.99 : 0; }
-  discount(): number { return calculateCoupon(this.appliedCouponCode, this.subtotal(), this.deliveryFee()).discount; }
+  discount(): number { return calculateCoupon(this.appliedCouponCode, this.subtotal(), this.deliveryFee(),this.couponService.coupons()).discount; }
   total(): number { return Math.max(0, this.subtotal() + this.deliveryFee() - this.discount()); }
 
   digits(value: string): string { return value.replace(/\D/g, ''); }
