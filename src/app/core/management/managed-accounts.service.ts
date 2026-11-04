@@ -24,6 +24,15 @@ export class ManagedAccountsService {
     const id = account.id ?? `a${Date.now()}`;
     this.accounts.update(current => { const index = current.findIndex(item => item.id === id); const next = [...current]; if (index < 0) next.unshift({ ...account, id }); else next[index] = { ...account, id }; this.persist(next); return next; });
   }
+  saveMany(accounts: Omit<ManagedAccount, 'id'>[]): void {
+    if (!accounts.length) return;
+    this.accounts.update(current => {
+      const created = accounts.map((account, index) => ({ ...account, id: `bulk-${Date.now()}-${index}` }));
+      const next = [...created, ...current];
+      this.persist(next);
+      return next;
+    });
+  }
   remove(id: string): void { this.accounts.update(current => { const next = current.filter(account => account.id !== id); this.persist(next); return next; }); }
   private persist(accounts: ManagedAccount[]): void { try { localStorage.setItem('clickeat.accounts', JSON.stringify(accounts)); } catch { /* A sessão continua editável quando o armazenamento não está disponível. */ } }
 }

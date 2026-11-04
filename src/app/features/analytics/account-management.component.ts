@@ -1,13 +1,16 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { AccountKind, AccountStatus, ManagedAccount, ManagedAccountsService } from '../../core/management/managed-accounts.service';
 import { ReportExportService } from '../../core/reports/report-export.service';
+import { BulkImportModalComponent, CsvRow } from '../../shared/components/bulk-import-modal/bulk-import-modal.component';
+import { NotificationService } from '../../core/notifications/notification.service';
 
 @Component({
   selector: 'app-account-management',
   standalone: true,
+  imports: [BulkImportModalComponent],
   template: `
     <section class="management-card account-management" aria-labelledby="accounts-title">
-      <header class="management-head"><div><small>GESTÃO DA PLATAFORMA</small><h3 id="accounts-title">Cadastros da plataforma</h3><p>Visão organizada de clientes, restaurantes e entregadores.</p></div><button class="primary-action" type="button" (click)="create()"><span aria-hidden="true">＋</span> Novo cadastro</button></header>
+      <header class="management-head"><div><small>GESTÃO DA PLATAFORMA</small><h3 id="accounts-title">Cadastros da plataforma</h3><p>Visão organizada de clientes, restaurantes e entregadores.</p></div><div class="management-cta">@if(selectedKind()==='Usuários'){<button class="bulk-action" type="button" (click)="bulkImportOpen.set(true)"><span aria-hidden="true">▦</span> Importar planilha</button>}<button class="primary-action" type="button" (click)="create()"><span aria-hidden="true">＋</span> Novo cadastro</button></div></header>
       <div class="management-summary" aria-label="Resumo das contas">
         <article><span class="summary-icon total-icon">▦</span><div><small>Total de contas</small><b>{{summary().total}}</b></div></article>
         <article><span class="summary-icon store-icon">⌂</span><div><small>Restaurantes</small><b>{{summary().restaurants}}</b></div></article>
@@ -25,12 +28,14 @@ import { ReportExportService } from '../../core/reports/report-export.service';
     </section>
     @if(editorOpen()){<div class="dialog-backdrop" [class.closing]="dialogClosing()" (click)="closeEditor()"><section class="account-dialog" [class.closing]="dialogClosing()" role="dialog" aria-modal="true" aria-labelledby="account-dialog-title" (click)="$event.stopPropagation()"><button class="dialog-close" type="button" aria-label="Fechar" (click)="closeEditor()">×</button><div class="dialog-icon">{{editingId()?'✎':'＋'}}</div><small class="dialog-eyebrow">GESTÃO DA PLATAFORMA</small><h2 id="account-dialog-title">{{editingId()?'Editar cadastro':'Novo cadastro'}}</h2><p>Preencha as informações principais para manter a operação organizada.</p><form (submit)="$event.preventDefault();submit()"><label>Tipo de conta<select [value]="kind()" (change)="kind.set($any($event.target).value)">@for(option of kinds;track option){<option [value]="option">{{option}}</option>}</select></label><label>Nome<input required [value]="name()" (input)="name.set($any($event.target).value)" placeholder="Nome completo ou nome da loja"></label><div class="form-pair"><label>E-mail<input required type="email" [value]="email()" (input)="email.set($any($event.target).value)" placeholder="nome@email.com"></label><label>Telefone<input [value]="phone()" (input)="phone.set($any($event.target).value)" placeholder="(11) 99999-0000"></label></div><div class="form-pair"><label>Cidade / bairro<input [value]="location()" (input)="location.set($any($event.target).value)" placeholder="Pinheiros, São Paulo"></label><label>Status<select [value]="status()" (change)="status.set($any($event.target).value)"><option>Ativa</option><option>Em análise</option><option>Pausada</option></select></label></div><label>Observação<input [value]="detail()" (input)="detail.set($any($event.target).value)" placeholder="Ex.: Cliente · 8 pedidos"></label><div class="dialog-actions"><button type="button" class="cancel-action" (click)="closeEditor()">Cancelar</button><button type="submit" class="primary-action">{{editingId()?'Salvar alterações':'Criar cadastro'}}</button></div></form></section></div>}
     @if(deleteTarget();as account){<div class="dialog-backdrop" [class.closing]="dialogClosing()" (click)="closeDelete()"><section class="account-dialog compact-dialog" [class.closing]="dialogClosing()" role="alertdialog" aria-modal="true" aria-labelledby="delete-account-title" (click)="$event.stopPropagation()"><div class="dialog-icon danger-icon">⌫</div><small class="dialog-eyebrow">EXCLUIR CADASTRO</small><h2 id="delete-account-title">Remover {{account.name}}?</h2><p>Essa conta será removida desta demonstração. Você poderá criá-la novamente depois.</p><div class="dialog-actions"><button class="cancel-action" type="button" (click)="closeDelete()">Cancelar</button><button class="delete-confirm" type="button" (click)="confirmDelete()">Excluir cadastro</button></div></section></div>}
+    @if(bulkImportOpen()){<app-bulk-import-modal mode="users" (close)="bulkImportOpen.set(false)" (import)="importUsers($event)"/>}
   `,
   styleUrl: './account-management.component.css',
 })
 export class AccountManagementComponent {
   readonly service = inject(ManagedAccountsService);
   private readonly exporter = inject(ReportExportService);
+  private readonly notices = inject(NotificationService);
   readonly kinds: AccountKind[] = ['Usuários', 'Restaurantes', 'Entregadores'];
   readonly selectedKind = signal<AccountKind>('Usuários');
   readonly query = signal('');
@@ -50,6 +55,7 @@ export class AccountManagementComponent {
   readonly detail = signal('');
   readonly status = signal<AccountStatus>('Ativa');
   readonly deleteTarget = signal<ManagedAccount | null>(null);
+  readonly bulkImportOpen = signal(false);
 
   count(kind: AccountKind): number { return this.service.accounts().filter(account => account.kind === kind).length; }
   initial(name: string): string { return name.trim().charAt(0).toUpperCase(); }
@@ -62,4 +68,20 @@ export class AccountManagementComponent {
   confirmDelete(): void { const account = this.deleteTarget(); if (account) this.service.remove(account.id); this.closeDelete(); }
   private closeWithAnimation(close: () => void): void { if (this.dialogClosing()) return; this.dialogClosing.set(true); window.setTimeout(() => { close(); this.dialogClosing.set(false); }, 220); }
   export(): void { this.exporter.downloadCsv(`clickeat-${this.selectedKind().toLocaleLowerCase('pt-BR')}.csv`, ['Tipo', 'Nome', 'E-mail', 'Telefone', 'Localização', 'Observação', 'Status'], this.filtered().map(account => [account.kind, account.name, account.email, account.phone, account.location, account.detail, account.status])); }
+  importUsers(rows: CsvRow[]): void {
+    const known = new Set(this.service.accounts().filter(account => account.kind === 'Usuários').map(account => account.email.trim().toLocaleLowerCase('pt-BR')));
+    const created: Omit<ManagedAccount, 'id'>[] = [];
+    let duplicates = 0;
+    for (const row of rows) {
+      const email = row['email'].trim().toLocaleLowerCase('pt-BR');
+      if (known.has(email)) { duplicates++; continue; }
+      known.add(email);
+      const status: AccountStatus = ['Ativa', 'Em análise', 'Pausada'].includes(row['status']) ? row['status'] as AccountStatus : 'Ativa';
+      created.push({ kind: 'Usuários', name: row['nome'].trim(), email, phone: row['telefone'] || '', location: row['cidade'] || '', detail: row['observacao'] || 'Cliente', status });
+    }
+    this.service.saveMany(created);
+    this.bulkImportOpen.set(false);
+    if (created.length) this.notices.success(`${created.length} usuário(s) importado(s)${duplicates ? `; ${duplicates} duplicado(s) ignorado(s)` : ''}.`);
+    else this.notices.warning('Todos os e-mails da planilha já estão cadastrados.');
+  }
 }

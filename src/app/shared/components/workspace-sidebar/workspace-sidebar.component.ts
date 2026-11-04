@@ -42,7 +42,7 @@ export class WorkspaceSidebarComponent {
       admin: [
         { id: 'overview', icon: '⌂', label: 'Visão geral' }, { id: 'reports', icon: '▤', label: 'Relatórios' },
         { id: 'orders', icon: '▧', label: 'Pedidos' }, { id: 'shops', icon: '◇', label: 'Lojas' },
-        { id: 'coupons', icon: '♧', label: 'Cupons' }, { id: 'settings', icon: '⚙', label: 'Configurações' },
+        { id: 'home-editor', icon: '▤', label: 'Página inicial' }, { id: 'coupons', icon: '♧', label: 'Cupons' }, { id: 'settings', icon: '⚙', label: 'Configurações' },
       ],
       store: [
         { id: 'overview', icon: '⌂', label: 'Visão geral' }, { id: 'orders', icon: '▧', label: 'Pedidos' },
