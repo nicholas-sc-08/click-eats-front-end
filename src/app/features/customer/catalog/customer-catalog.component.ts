@@ -8,6 +8,7 @@ import { PromotionService } from '../../../core/catalog/promotion.service';
 import { InventoryService } from '../../../core/catalog/inventory.service';
 import { MenuCatalogService } from '../../../core/catalog/menu-catalog.service';
 import { OrderTrackingDemoService } from '../../../core/delivery/order-tracking-demo.service';
+import { HomeBannerSlide, HomepageLayoutService } from '../../../core/homepage/homepage-layout.service';
 
 type CatalogView = 'home' | 'storefront' | 'favorites' | 'tracking';
 
@@ -33,14 +34,13 @@ type CatalogView = 'home' | 'storefront' | 'favorites' | 'tracking';
     } @else {
       <section class="content">
         <div class="welcome-row"><div><div class="eyebrow">QUINTA-FEIRA, 30 DE OUTUBRO</div><h1>Oi, Marina <span>♡</span></h1><p class="subheading">O que vai deixar seu dia mais gostoso?</p></div><div class="weather-pill">☀ <span>22° em São Paulo</span></div></div>
-        <label class="search-row"><span>⌕</span><input aria-label="Buscar restaurantes" placeholder="O que você quer comer hoje?" [value]="query()" (input)="query.set($any($event.target).value)"><kbd>⌘ K</kbd><button type="button">Buscar</button></label>
-        <div class="hero"><div class="hero-copy"><span class="hero-tag">✳ SÓ HOJE</span><h2>Seu próximo<br>pedido favorito<br><em>tem desconto.</em></h2><p>Use <b>PRIMEIRACOMPRA</b> e ganhe R$ 15 de desconto no seu pedido.</p><button type="button" (click)="couponRequest.emit()">Aproveitar oferta <span>→</span></button><small>*Em pedidos acima de R$ 35</small></div><div class="hero-visual"><div class="hero-orbit"></div><div class="hero-food">🍔</div><div class="hero-fry">🍟</div><div class="hero-sticker">-15<span>REAIS</span></div><div class="hero-star">✳</div></div></div>
-        <button class="active-delivery-card" type="button" (click)="navigate.emit('tracking')"><span class="delivery-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7h11v11H3zM14 11h4l3 4v3h-7z"/><circle cx="7.5" cy="19" r="2"/><circle cx="17.5" cy="19" r="2"/></svg></span><span class="delivery-copy"><small>PEDIDO #CE-8425 · BRASA & PONTO</small><strong>{{tracking.delivered()?'Pedido entregue!':'Seu pedido saiu para entrega!'}}</strong><span>{{tracking.delivered()?'Entrega concluída':('Rafael está a caminho · previsão de '+tracking.etaMinutes()+' min')}}</span></span><span class="delivery-cta">Acompanhar <b>→</b></span><i class="delivery-pulse"></i></button>
-        <div class="section-heading"><div><h2>O que bateu vontade?</h2><p>Escolha sua categoria favorita</p></div><div class="category-arrows"><button type="button" aria-label="Rolar categorias para a esquerda" (click)="scrollCategories(-1)">←</button><button type="button" aria-label="Rolar categorias para a direita" (click)="scrollCategories(1)">→</button></div></div>
-        <div #categoriesTrack class="categories" tabindex="0" aria-label="Categorias de restaurantes">@for (item of categories; track item.name) { <button class="category-card" type="button" [class.selected]="category()===item.name" [attr.aria-pressed]="category()===item.name" (click)="selectCategory(item.name)"><span class="category-emoji">{{ item.emoji }}</span><b>{{ item.name }}</b><small>{{ item.count }} lugares</small></button> }</div>
-        <div class="section-heading restaurant-heading"><div><h2>{{ category()==='Todas'?'Queridinhos por perto':category()+' por perto' }}</h2><p>Seleção caprichada a poucos minutos de você</p></div><button class="text-btn" type="button" (click)="selectCategory('Todas')">Ver todos <span>→</span></button></div>
-        @if(visibleRestaurants().length){<div class="restaurant-grid">@for (restaurant of visibleRestaurants(); track restaurant.name) { <app-restaurant-card [restaurant]="restaurant" [deliveryEstimate]="deliveryTime(restaurant.name)" [favorite]="favorites().includes(restaurant.name)" (open)="openStore($event)" (favoriteToggle)="toggleFavorite($event)" /> }</div>} @else {<div class="empty-results"><span class="empty-results-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="21" cy="21" r="13"/><path d="m31 31 9 9M16 19h10M16 24h7"/></svg></span><h2>Nenhum resultado por aqui</h2><p>Experimente buscar por outro prato ou restaurante.</p><button type="button" class="text-btn" (click)="query.set('');category.set('Todas')">Limpar busca e filtros</button></div>}
-      </section>
+        @for(section of homepage.sections();track section.id){@switch(section.id){
+          @case('search'){<label class="search-row"><span>⌕</span><input aria-label="Buscar restaurantes" placeholder="O que você quer comer hoje?" [value]="query()" (input)="query.set($any($event.target).value)"><kbd>⌘ K</kbd><button type="button">Buscar</button></label>}
+          @case('banner'){<div class="hero" [class.hero-changing]="bannerTransition()"><div class="hero-copy"><span class="hero-tag">{{activeSlide().eyebrow}}</span><h2>{{activeSlide().lineOne}}<br>{{activeSlide().lineTwo}}<br><em>{{activeSlide().highlight}}</em></h2><p>{{bannerDescriptionBefore()}}<b>{{activeSlide().coupon}}</b>{{bannerDescriptionAfter()}}</p><button type="button" (click)="couponRequest.emit()">Aproveitar oferta <span>→</span></button><small>{{activeSlide().footnote}}</small></div><div class="hero-visual"><div class="hero-orbit"></div><div class="hero-food">🍔</div><div class="hero-fry">🍟</div><div class="hero-sticker">{{bannerDiscount()}}<span>REAIS</span></div><div class="hero-star">✳</div></div><div class="hero-carousel-controls"><button type="button" aria-label="Destaque anterior" (click)="stepBanner(-1)">‹</button><div>@for(slide of homepage.slides();track slide.id;let index=$index){<button type="button" class="hero-dot" [class.active]="index===bannerIndex()" [attr.aria-label]="'Ver destaque '+(index+1)" (click)="showBanner(index)"></button>}</div><button type="button" aria-label="Próximo destaque" (click)="stepBanner(1)">›</button></div></div>}
+          @case('delivery'){<button class="active-delivery-card" type="button" (click)="navigate.emit('tracking')"><span class="delivery-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7h11v11H3zM14 11h4l3 4v3h-7z"/><circle cx="7.5" cy="19" r="2"/><circle cx="17.5" cy="19" r="2"/></svg></span><span class="delivery-copy"><small>PEDIDO #CE-8425 · BRASA & PONTO</small><strong>{{tracking.delivered()?'Pedido entregue!':'Seu pedido saiu para entrega!'}}</strong><span>{{tracking.delivered()?'Entrega concluída':('Rafael está a caminho · previsão de '+tracking.etaMinutes()+' min')}}</span></span><span class="delivery-cta">Acompanhar <b>→</b></span><i class="delivery-pulse"></i></button>}
+          @case('categories'){<div class="section-heading"><div><h2>O que bateu vontade?</h2><p>Escolha sua categoria favorita</p></div><div class="category-arrows"><button type="button" aria-label="Rolar categorias para a esquerda" (click)="scrollCategories(-1)">←</button><button type="button" aria-label="Rolar categorias para a direita" (click)="scrollCategories(1)">→</button></div></div><div #categoriesTrack class="categories" tabindex="0" aria-label="Categorias de restaurantes">@for (item of categories; track item.name) { <button class="category-card" type="button" [class.selected]="category()===item.name" [attr.aria-pressed]="category()===item.name" (click)="selectCategory(item.name)"><span class="category-emoji">{{ item.emoji }}</span><b>{{ item.name }}</b><small>{{ item.count }} lugares</small></button> }</div>}
+          @case('restaurants'){<div class="section-heading restaurant-heading"><div><h2>{{ category()==='Todas'?'Queridinhos por perto':category()+' por perto' }}</h2><p>Seleção caprichada a poucos minutos de você</p></div><button class="text-btn" type="button" (click)="selectCategory('Todas')">Ver todos <span>→</span></button></div>@if(visibleRestaurants().length){<div class="restaurant-grid">@for (restaurant of visibleRestaurants(); track restaurant.name) { <app-restaurant-card [restaurant]="restaurant" [deliveryEstimate]="deliveryTime(restaurant.name)" [favorite]="favorites().includes(restaurant.name)" (open)="openStore($event)" (favoriteToggle)="toggleFavorite($event)" /> }</div>} @else {<div class="empty-results"><span class="empty-results-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="21" cy="21" r="13"/><path d="m31 31 9 9M16 19h10M16 24h7"/></svg></span><h2>Nenhum resultado por aqui</h2><p>Experimente buscar por outro prato ou restaurante.</p><button type="button" class="text-btn" (click)="query.set('');category.set('Todas')">Limpar busca e filtros</button></div>}}
+        }}</section>
     }
     @if (selectedProduct(); as product) { <app-product-detail [product]="product" (close)="selectedProduct.set(null)" (addToCart)="addToCart.emit($event); selectedProduct.set(null)" /> }
   `,
@@ -51,6 +51,7 @@ export class CustomerCatalogComponent {
   readonly inventory = inject(InventoryService);
   readonly menuCatalog = inject(MenuCatalogService);
   readonly tracking = inject(OrderTrackingDemoService);
+  readonly homepage = inject(HomepageLayoutService);
   @Input({ required: true }) view: string = 'home';
   @Output() navigate = new EventEmitter<CatalogView>();
   @Output() addToCart = new EventEmitter<MenuItem[]>();
@@ -70,9 +71,11 @@ export class CustomerCatalogComponent {
   readonly activeStore = signal('Brasa & Ponto');
   readonly menuQuery = signal('');
   readonly selectedProduct = signal<MenuItem | null>(null);
+  readonly bannerIndex=signal(0);readonly bannerTransition=signal(false);
   @ViewChild('categoriesTrack') private categoriesTrack?: ElementRef<HTMLElement>;
   constructor() { try { this.favorites.set(JSON.parse(localStorage.getItem('clickeat.favorites') ?? '[]')); } catch { this.favorites.set([]); } }
   readonly selectedStore = computed(() => this.restaurants.find(store => store.name === this.activeStore()) ?? this.restaurants[0]);
+  readonly activeSlide=computed(()=>this.homepage.slides()[Math.min(this.bannerIndex(),this.homepage.slides().length-1)]??{id:'fallback',eyebrow:'✳ DESTAQUE',lineOne:'Seu próximo',lineTwo:'pedido favorito',highlight:'tem desconto.',description:'Confira nossas ofertas especiais.',coupon:'PRIMEIRACOMPRA',footnote:'*Consulte condições'} satisfies HomeBannerSlide);
   readonly visibleMenu = computed(() => {
     const query = this.menuQuery().trim().toLowerCase();
     const storeMenu = this.activeStore() === 'Brasa & Ponto' ? this.menuCatalog.products() : (MENU_BY_RESTAURANT[this.activeStore()] ?? []);
@@ -93,6 +96,11 @@ export class CustomerCatalogComponent {
   });
 
   selectCategory(name: string): void { this.category.set(this.category() === name ? 'Todas' : name); }
+  showBanner(index:number):void{if(index===this.bannerIndex())return;this.bannerTransition.set(true);this.bannerIndex.set(index);setTimeout(()=>this.bannerTransition.set(false),220);}
+  stepBanner(direction:-1|1):void{const length=this.homepage.slides().length;if(!length)return;this.showBanner((this.bannerIndex()+direction+length)%length);}
+  bannerDescriptionBefore():string{const coupon=this.activeSlide().coupon;const description=this.activeSlide().description;const index=description.indexOf(coupon);return index<0?description:description.slice(0,index);}
+  bannerDescriptionAfter():string{const coupon=this.activeSlide().coupon;const description=this.activeSlide().description;const index=description.indexOf(coupon);return index<0?'':description.slice(index+coupon.length);}
+  bannerDiscount():string{const match=this.activeSlide().description.match(/R\$\s?([\d,]+)/);return match?`-${match[1]}`:'✦';}
   scrollCategories(direction: -1 | 1): void { this.categoriesTrack?.nativeElement.scrollBy({ left: direction * Math.max(220, this.categoriesTrack.nativeElement.clientWidth * .72), behavior: 'smooth' }); }
   addSingleToCart(item: MenuItem): void { this.addToCart.emit([item]); }
   openProduct(item: MenuItem): void { this.selectedProduct.set(this.promotions.itemForCart(item)); }

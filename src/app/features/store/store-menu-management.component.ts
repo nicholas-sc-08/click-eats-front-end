@@ -2,12 +2,15 @@ import { Component, inject, signal } from '@angular/core';
 import { NotificationService } from '../../core/notifications/notification.service';
 import { MenuCatalogService } from '../../core/catalog/menu-catalog.service';
 import { MenuItem } from '../../models/catalog.models';
+import { BulkImportModalComponent, CsvRow } from '../../shared/components/bulk-import-modal/bulk-import-modal.component';
+import { InventoryService } from '../../core/catalog/inventory.service';
 
 @Component({
   selector: 'app-store-menu-management',
   standalone: true,
+  imports: [BulkImportModalComponent],
   template: `
-    <section class="panel catalog-manager"><div class="panel-heading"><div><div class="eyebrow">VITRINE DO CLIENTE</div><h2>Organize seu cardápio</h2><p>Arraste os itens ou use as setas para mudar a ordem que os clientes veem.</p></div><button class="primary-btn" type="button" (click)="startNewProduct()">＋ Adicionar produto</button></div>
+    <section class="panel catalog-manager"><div class="panel-heading"><div><div class="eyebrow">VITRINE DO CLIENTE</div><h2>Organize seu cardápio</h2><p>Arraste os itens ou use as setas para mudar a ordem que os clientes veem.</p></div><div class="catalog-heading-actions"><button class="bulk-menu-action" type="button" (click)="bulkImportOpen.set(true)"><span>▦</span> Importar planilha</button><button class="primary-btn" type="button" (click)="startNewProduct()">＋ Adicionar produto</button></div></div>
       <div class="catalog-product-list" (dragover)="$event.preventDefault()">
         @for(product of menu.products(); track product.name; let index = $index){
           <article class="catalog-product-row" [class.dragging]="draggedIndex()===index" draggable="true" (dragstart)="draggedIndex.set(index)" (dragend)="draggedIndex.set(null)" (drop)="moveProduct(index)">
@@ -20,17 +23,20 @@ import { MenuItem } from '../../models/catalog.models';
     @if(editingProduct(); as product){<div class="product-dialog-backdrop" [class.closing]="dialogClosing()" (click)="closeProductDialog()"><section class="product-dialog" [class.closing]="dialogClosing()" role="dialog" aria-modal="true" aria-labelledby="product-dialog-title" (click)="$event.stopPropagation()"><button class="dialog-close" type="button" aria-label="Fechar" (click)="closeProductDialog()">×</button><div class="eyebrow">{{product.originalName?'ATUALIZE SEU CARDÁPIO':'NOVO ITEM NA VITRINE'}}</div><h2 id="product-dialog-title">{{product.originalName?'Editar produto':'Adicionar produto'}}</h2><form (submit)="$event.preventDefault(); saveProduct()"><label>Nome do produto<input required maxlength="60" [value]="product.name" (input)="updateDraft('name',$any($event.target).value)"></label><label>Descrição<textarea required maxlength="180" rows="3" [value]="product.desc" (input)="updateDraft('desc',$any($event.target).value)"></textarea></label><div class="product-form-grid"><label>Preço (R$)<input required type="number" min="0.01" step="0.01" [value]="product.price" (input)="updateDraft('price',$any($event.target).value)"></label><label>Imagem do produto<input type="url" placeholder="https://…" [value]="product.image" (input)="updateDraft('image',$any($event.target).value)"></label></div><div class="product-image-preview"><img [src]="product.image || '/images/food-fallback.svg'" [alt]="'Prévia de ' + (product.name || 'novo produto')" (error)="useFallback($event)"><div><b>Prévia da vitrine</b><small>Assim seu produto aparece para os clientes.</small></div></div><label>Categoria / etiqueta<input maxlength="30" [value]="product.tag" (input)="updateDraft('tag',$any($event.target).value)"></label><p class="dialog-caption">Alterações ficam salvas neste navegador até a integração do backend.</p><div class="dialog-actions"><button class="soft-btn" type="button" (click)="closeProductDialog()">Cancelar</button><button class="primary-btn" type="submit">Salvar produto</button></div></form></section></div>}
     @if(productToDelete(); as product){<div class="product-dialog-backdrop" [class.closing]="dialogClosing()" (click)="closeDeleteDialog()"><section class="product-dialog confirm-product-delete" [class.closing]="dialogClosing()" role="alertdialog" aria-modal="true" aria-labelledby="delete-product-title" (click)="$event.stopPropagation()"><div class="eyebrow">CONFIRME A AÇÃO</div><h2 id="delete-product-title">Remover {{product.name}}?</h2><p>O produto deixará de aparecer no cardápio dos clientes.</p><div class="dialog-actions"><button class="soft-btn" type="button" (click)="closeDeleteDialog()">Manter produto</button><button class="danger-btn" type="button" (click)="deleteProduct()">Remover produto</button></div></section></div>}
     @if(orderSaved()){<div class="product-dialog-backdrop order-saved-backdrop" [class.closing]="dialogClosing()" (click)="closeOrderSavedDialog()"><section class="product-dialog order-saved-dialog" [class.closing]="dialogClosing()" role="dialog" aria-modal="true" aria-labelledby="order-saved-title" (click)="$event.stopPropagation()"><span class="order-saved-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12 4.5 4.5L19 7"/></svg></span><div class="eyebrow">VITRINE ATUALIZADA</div><h2 id="order-saved-title">Ordem do cardápio salva</h2><p>Os produtos já aparecem na nova posição para os clientes.</p><div class="dialog-actions"><button class="primary-btn" type="button" (click)="closeOrderSavedDialog()">Entendi</button></div></section></div>}
+    @if(bulkImportOpen()){<app-bulk-import-modal mode="products" (close)="bulkImportOpen.set(false)" (import)="importProducts($event)"/>}
   `,
   styleUrl: './store-menu-management.component.css',
 })
 export class StoreMenuManagementComponent {
   readonly menu = inject(MenuCatalogService);
   private readonly notifications = inject(NotificationService);
+  private readonly inventory = inject(InventoryService);
   readonly draggedIndex = signal<number | null>(null);
   readonly editingProduct = signal<(MenuItem & { originalName?: string }) | null>(null);
   readonly productToDelete = signal<MenuItem | null>(null);
   readonly orderSaved = signal(false);
   readonly dialogClosing = signal(false);
+  readonly bulkImportOpen=signal(false);
 
   startNewProduct(): void { this.dialogClosing.set(false); this.productToDelete.set(null); this.editingProduct.set({ name: '', desc: '', price: 0, image: '', tag: 'NOVO' }); }
   startEditProduct(product: MenuItem): void { this.dialogClosing.set(false); this.productToDelete.set(null); this.editingProduct.set({ ...product, originalName: product.name }); }
@@ -50,6 +56,12 @@ export class StoreMenuManagementComponent {
     this.menu.save(items);
     this.closeProductDialog();
     this.notifications.success(draft.originalName ? 'Produto atualizado.' : 'Produto adicionado ao cardápio.');
+  }
+
+  importProducts(rows:CsvRow[]):void{
+    const current=this.menu.products();const names=new Set(current.map(item=>item.name.trim().toLocaleLowerCase('pt-BR')));const additions:MenuItem[]=[];let duplicates=0;
+    for(const row of rows){const name=row['nome'].trim();const normalized=name.toLocaleLowerCase('pt-BR');if(names.has(normalized)){duplicates++;continue;}names.add(normalized);const price=Number(row['preco'].trim().replace(/^R\$\s*/i,'').replace(/\./g,'').replace(',','.'));const product:MenuItem={name,desc:row['descricao'].trim(),price,image:row['imagem']?.trim()||'/images/food-fallback.svg',tag:row['categoria']?.trim()||'NOVO'};additions.push(product);const limitEnabled=['sim','true','1','yes','s'].includes((row['estoque_limitado']||'').trim().toLocaleLowerCase('pt-BR'));if(limitEnabled){const quantity=Math.max(0,Number(row['quantidade_estoque'])||0);this.inventory.save(name,{enabled:true,quantity});}}
+    if(additions.length)this.menu.save([...current,...additions]);this.bulkImportOpen.set(false);if(additions.length)this.notifications.success(`${additions.length} produto(s) importado(s)${duplicates?`; ${duplicates} duplicado(s) ignorado(s)`:''}.`);else this.notifications.warning('Todos os produtos da planilha já existem no cardápio.');
   }
 
   confirmDelete(product: MenuItem): void { this.dialogClosing.set(false); this.productToDelete.set(product); this.editingProduct.set(null); }

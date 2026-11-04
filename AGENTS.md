@@ -4,7 +4,7 @@
 
 ClickEat is a Brazilian food delivery marketplace prototype. It borrows familiar marketplace patterns from apps such as iFood, but it must retain its own brand, name, visual language, copy, and assets. Do not reproduce iFood's logo, exact palette, or proprietary assets. This repository is the **front-end only**. Backend integration and a future monorepo are later phases; treat all seeded accounts, metrics, purchases, tracking, reviews, payments, and operational actions as demo data unless a real API is explicitly added.
 
-The owner wants a polished, clean, professional UI and maintainable code. Keep the user informed in Portuguese, explain meaningful implementation decisions, and continue from this file when starting a new conversation. Do not commit changes automatically. When a coherent milestone is ready, recommend a commit and provide a concise message. Recommend a new feature branch when work is a distinct feature or the current branch has already been merged; ask before changing branches. Recommend a PR when a feature is reviewable and build-checked. The current working branch at the time this guide was written is `feature/clickeat-first-experience`; always confirm the actual branch and Git status before further work.
+The owner wants a polished, clean, professional UI and maintainable code. Keep the user informed in Portuguese, explain meaningful implementation decisions, and continue from this file when starting a new conversation. Do not commit changes automatically. When a coherent milestone is ready, recommend a commit and provide a concise message. Recommend a new feature branch when work is a distinct feature or the current branch has already been merged; ask before changing branches. Recommend a PR when a feature is reviewable and build-checked. The working branch must always be confirmed from Git before further work; the latest observed branch is `develop`.
 
 ## Stack and commands
 
@@ -36,16 +36,20 @@ Important current UX details:
 - Store review page has seeded sample reviews and a working local reply/filter interaction.
 - Store product inventory may be unlimited or assigned a remaining quantity; exhausted limited products become unavailable in the customer catalog.
 - Analytics period selectors and admin entity selectors change the demo chart presentation. These are not connected to Power BI or a live analytics source.
+- Admin's **Página inicial** workspace can reorder the customer home sections and edit/reorder promotional carousel slides; the shared `HomepageLayoutService` persists this demo presentation to local storage. The customer carousel is read-only and reflects the configured slides.
+- The user and restaurant product batch import dialogs accept semicolon/comma-delimited CSV files, provide downloadable templates, preview rows, validate required fields, and persist valid demo records locally. `.xlsx` parsing is not included.
 - Google sign-in, real payment/Pix creation, authorization, account recovery, and transactional order operations require backend/provider integration; never describe the current front-end demo as processing real purchases.
 
-## Current implementation notes (2026-10-31)
+## Current implementation notes (2026-11-04)
 
-- The current branch is `feature/clickeat-first-experience`. The favorites milestone is already committed as `feat: add customer favorites and search empty state.`; do not amend it when continuing the next milestone.
+- The latest observed branch is `develop`; confirm current Git state before new work. The favorites milestone was previously committed as `feat: add customer favorites and search empty state.`.
 - `package.json` currently contains Angular 22, Tailwind CSS 4 and RxJS. It does **not** contain Spartan UI packages. Until the dependency is deliberately added and integrated, follow the app's custom CSS and inline SVG patterns; do not describe existing screens as Spartan components.
 - `MenuCatalogService` owns the Brasa & Ponto demo menu in `clickeat.menu.brasa-ponto`; store edits and ordering are reflected by the customer catalog and saved to local storage. `InventoryService` owns limited availability in `clickeat.inventory`. Both listen for same-origin browser storage events so other tabs in this browser profile refresh without a page reload.
 - `StoreMenuManagementComponent` owns the store's product editor and ordering controls. The catalog supports adding, editing, removing (with confirmation), drag ordering, keyboard-friendly move buttons, and explicit stock limit/quantity controls. These are local demo changes, not shared between devices or accounts.
 - `OrderTrackingDemoService` drives the shared demo ETA in the customer home banner and tracking page. Its countdown is accelerated for the prototype; route, courier location, ETA and completion are not GPS or server updates.
 - Admin and restaurant chart points expose a keyboard-focusable SVG detail popover. The underlying chart values remain seeded demonstration data.
+- Admin **Página inicial** includes draggable and keyboard-reorderable home content sections plus editable, ordered promotion carousel slides. `HomepageLayoutService` persists the layout and copy locally; the customer home renders the configured order and carousel.
+- Admin user import and restaurant product import use a shared CSV modal with templates, file validation and preview. Imported demo records are kept in local storage; Excel `.xlsx` file parsing is not implemented.
 - The customer profile form saves demo details to `clickeat.customer-profile`. It does not update an authenticated account.
 - Real multi-user live updates require a backend event transport, such as NestJS WebSockets (Socket.IO or `ws`) or SSE, with authenticated room/topic subscriptions and persisted order/catalog state. Keep frontend demo persistence behind services so those services can later be replaced by API and realtime adapters. Do not claim BroadcastChannel/localStorage synchronization is server realtime.
 - Angular 22 requires Node.js 22.22.3 or newer (or 24.15.0 / 26+). The default shell may still select Node 20; use the installed supported Node version when building.
